@@ -1,2 +1,2 @@
-# Gjimnazi-Eqrem-abej
+#-Gjimnazi Eqrem Çabej
 school
