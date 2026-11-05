@@ -40,6 +40,8 @@ export interface FieldDef {
   fileMeta?: { size?: string; type?: string };
   /** full-width in the form grid */
   wide?: boolean;
+  /** Translation field: rendered in the collapsible German section. */
+  lang?: "de";
   defaultValue?: string | number | boolean;
 }
 
@@ -61,6 +63,16 @@ export interface ResourceDef {
   publicPath?: string;
   group: "Përmbajtja" | "Mësimi" | "Jeta shkollore" | "Media" | "Shkolla";
 }
+
+/** German twin of a text field, grouped in the form's "Gjermanisht" section. */
+const de = (name: string, label: string, type: FieldType = "text", extra: Partial<FieldDef> = {}): FieldDef => ({
+  name: `${name}_de`,
+  label,
+  type,
+  lang: "de",
+  wide: type !== "text",
+  ...extra,
+});
 
 const verificationField: FieldDef = {
   name: "verification",
@@ -106,6 +118,14 @@ export const RESOURCES: ResourceDef[] = [
       { name: "cover_alt", label: "Përshkrimi i fotos", type: "text", help: "Për lexuesit e ekranit. Përshkruani çfarë shihet." },
       { name: "author_name", label: "Autori", type: "text" },
       { name: "featured", label: "Lajm kryesor në ballinë", type: "boolean" },
+      { name: "show_date", label: "Shfaq datën e publikimit", type: "boolean", defaultValue: true, help: "Çaktivizojeni kur data e saktë nuk dihet." },
+      { name: "gallery", label: "Foto shtesë (lidhje)", type: "list", wide: true, help: "Një lidhje fotoje për rresht, p.sh. nga Galeria." },
+      { name: "source_url", label: "Lidhja e burimit", type: "url", help: "P.sh. artikulli origjinal i partnerit." },
+      de("title", "Titulli"),
+      de("category", "Kategoria"),
+      de("excerpt", "Përmbledhja", "textarea"),
+      de("body", "Teksti", "markdown"),
+      de("cover_alt", "Përshkrimi i fotos"),
     ],
   },
   {
@@ -145,6 +165,9 @@ export const RESOURCES: ResourceDef[] = [
         ],
       },
       { name: "expires_at", label: "Skadon më", type: "datetime", help: "Pas kësaj date njoftimi fshihet automatikisht nga faqja." },
+      de("title", "Titulli"),
+      de("audience", "Për kë"),
+      de("body", "Teksti", "textarea"),
     ],
   },
   {
@@ -178,6 +201,10 @@ export const RESOURCES: ResourceDef[] = [
       { name: "description", label: "Përshkrimi", type: "textarea", wide: true },
       { name: "cover_url", label: "Foto", type: "image", bucket: "media" },
       verificationField,
+      de("title", "Titulli"),
+      de("category", "Kategoria"),
+      de("location", "Vendi"),
+      de("description", "Përshkrimi", "textarea"),
     ],
   },
   {
@@ -214,6 +241,15 @@ export const RESOURCES: ResourceDef[] = [
       { name: "sort_order", label: "Renditja", type: "number", defaultValue: 0 },
       { name: "source_note", label: "Burimi", type: "text", wide: true },
       verificationField,
+      de("name", "Emri i plotë"),
+      de("short_name", "Emri i shkurtër"),
+      de("tagline", "Fjalia hyrëse"),
+      de("grades", "Klasat"),
+      de("summary", "Përmbledhja", "textarea"),
+      de("overview", "Përshkrimi", "textarea"),
+      de("outcomes", "Çfarë ofron programi", "list"),
+      de("pathways", "Pas gjimnazit", "list"),
+      de("source_note", "Burimi"),
     ],
   },
   {
@@ -243,6 +279,8 @@ export const RESOURCES: ResourceDef[] = [
       { name: "description", label: "Përshkrimi", type: "textarea", wide: true },
       { name: "sort_order", label: "Renditja", type: "number", defaultValue: 0 },
       verificationField,
+      de("name", "Lënda"),
+      de("description", "Përshkrimi", "textarea"),
     ],
   },
   {
@@ -276,6 +314,10 @@ export const RESOURCES: ResourceDef[] = [
       { name: "sort_order", label: "Renditja", type: "number", defaultValue: 0 },
       { name: "source_note", label: "Burimi", type: "text" },
       verificationField,
+      { name: "video_url", label: "Video (YouTube)", type: "url", help: "P.sh. një intervistë." },
+      de("role_title", "Pozita"),
+      de("department", "Departamenti"),
+      de("bio", "Biografia", "textarea"),
     ],
   },
   {
@@ -308,6 +350,10 @@ export const RESOURCES: ResourceDef[] = [
       { name: "cover_url", label: "Foto", type: "image", bucket: "media" },
       { name: "sort_order", label: "Renditja", type: "number", defaultValue: 0 },
       verificationField,
+      de("name", "Emri"),
+      de("meeting_info", "Takimet"),
+      de("summary", "Përshkrimi i shkurtër", "textarea"),
+      de("description", "Përshkrimi", "textarea"),
     ],
   },
   {
@@ -335,6 +381,7 @@ export const RESOURCES: ResourceDef[] = [
       { name: "role", label: "Roli", type: "text", help: "P.sh. Montazhier, Prezantuese, Mentor" },
       { name: "photo_url", label: "Foto", type: "image", bucket: "media" },
       { name: "sort_order", label: "Renditja", type: "number", defaultValue: 0 },
+      de("role", "Roli"),
     ],
   },
   {
@@ -367,6 +414,9 @@ export const RESOURCES: ResourceDef[] = [
       { name: "club_id", label: "Klubi", type: "relation", relation: { table: "clubs", labelField: "name" } },
       { name: "link_url", label: "Lidhja", type: "url" },
       { name: "cover_url", label: "Foto", type: "image", bucket: "media" },
+      de("title", "Titulli"),
+      de("summary", "Përmbledhja", "textarea"),
+      de("body", "Përshkrimi", "markdown"),
     ],
   },
   {
@@ -395,6 +445,10 @@ export const RESOURCES: ResourceDef[] = [
       { name: "category", label: "Kategoria", type: "text", defaultValue: "Gara" },
       { name: "description", label: "Përshkrimi", type: "textarea", wide: true },
       verificationField,
+      { name: "link_url", label: "Lidhja e burimit", type: "url" },
+      de("title", "Titulli"),
+      de("category", "Kategoria"),
+      de("description", "Përshkrimi", "textarea"),
     ],
   },
   {
@@ -439,6 +493,9 @@ export const RESOURCES: ResourceDef[] = [
       { name: "taken_at", label: "Data", type: "date" },
       { name: "width", label: "Gjerësia (px)", type: "number" },
       { name: "height", label: "Lartësia (px)", type: "number" },
+      de("title", "Titulli"),
+      de("album", "Albumi"),
+      de("caption", "Përshkrimi", "textarea"),
     ],
   },
   {
@@ -466,6 +523,9 @@ export const RESOURCES: ResourceDef[] = [
       { name: "category", label: "Kategoria", type: "text", defaultValue: "Të përgjithshme" },
       { name: "description", label: "Përshkrimi", type: "textarea", wide: true },
       { name: "file_url", label: "Skedari", type: "file", bucket: "documents", required: true, fileMeta: { size: "file_size", type: "file_type" } },
+      de("title", "Titulli"),
+      de("category", "Kategoria"),
+      de("description", "Përshkrimi", "textarea"),
     ],
   },
   {
@@ -496,6 +556,8 @@ export const RESOURCES: ResourceDef[] = [
       { name: "year", label: "Viti i të dhënës", type: "text", required: true },
       { name: "sort_order", label: "Renditja", type: "number", defaultValue: 0 },
       verificationField,
+      de("label", "Etiketa"),
+      de("source", "Burimi"),
     ],
   },
 ];

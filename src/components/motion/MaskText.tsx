@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
+import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -18,7 +19,7 @@ type Props = {
  * the DOM as one accessible heading; the animated spans are aria-hidden.
  */
 export function MaskText({ text, as = "h2", className, delay = 0, immediate = false, id }: Props) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const Tag = as;
   const words = text.split(" ");
   const trigger =

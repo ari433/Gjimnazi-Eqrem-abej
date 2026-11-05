@@ -190,3 +190,12 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* German compounds ("Sprachwissenschaften") must never push a phone layout wide. */
+:lang(de) :is(h1, h2, h3, h4) {
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+:lang(de) p {
+  hyphens: auto;
+}

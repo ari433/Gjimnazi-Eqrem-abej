@@ -1,17 +1,20 @@
 "use client";
 
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { ChevronLeft, ChevronRight, Images, Play, X } from "lucide-react";
 import type { MediaItem } from "@/lib/types";
 import { VideoEmbed } from "./VideoEmbed";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { asset, cn, youtubeId } from "@/lib/utils";
+import { t, type Locale } from "@/lib/i18n";
 
 /** Filterable gallery with an accessible lightbox (Esc, arrows, focus return). */
-export function GalleryGrid({ items }: { items: MediaItem[] }) {
-  const reduce = useReducedMotion();
+export function GalleryGrid({ items, locale = "sq" }: { items: MediaItem[]; locale?: Locale }) {
+  const L = t(locale).gallery_;
+  const reduce = useReducedMotionSafe();
   const albums = useMemo(() => Array.from(new Set(items.map((m) => m.album).filter(Boolean))) as string[], [items]);
   const [album, setAlbum] = useState<string | null>(null);
   const [kind, setKind] = useState<"all" | "image" | "video">("all");
@@ -44,21 +47,19 @@ export function GalleryGrid({ items }: { items: MediaItem[] }) {
 
   if (items.length === 0)
     return (
-      <EmptyState icon={Images} title="Galeria është ende bosh">
-        Fotot dhe videot shtohen nga stafi, me lejen e nxënësve që shfaqen në to.
-      </EmptyState>
+      <EmptyState icon={Images} title={L.empty} />
     );
 
   const current = open !== null ? shown[open] : null;
   const chip = (active: boolean) =>
-    cn("min-h-10 rounded-pill border px-4 text-sm font-semibold transition-colors", active ? "border-ink bg-ink text-white" : "border-line bg-white hover:border-ink");
+    cn("min-h-10 shrink-0 rounded-pill border px-4 text-sm font-semibold transition-colors", active ? "border-ink bg-ink text-white" : "border-line bg-white hover:border-ink");
 
   return (
     <>
-      <div className="mb-10 flex flex-wrap gap-2" role="group" aria-label="Filtro galerinë">
+      <div className="-mx-4 mb-8 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:mb-10 md:flex-wrap md:px-0" role="group" aria-label={L.filter}>
         {(["all", "image", "video"] as const).map((k) => (
           <button key={k} type="button" aria-pressed={kind === k} className={chip(kind === k)} onClick={() => setKind(k)}>
-            {k === "all" ? "Të gjitha" : k === "image" ? "Foto" : "Video"}
+            {k === "all" ? L.all : k === "image" ? L.photos : L.videos}
           </button>
         ))}
         {albums.length > 1 && <span className="mx-2 w-px self-stretch bg-line" aria-hidden />}
@@ -71,7 +72,7 @@ export function GalleryGrid({ items }: { items: MediaItem[] }) {
       </div>
 
       {shown.length === 0 ? (
-        <p className="text-muted">Asnjë element për këtë filtër.</p>
+        <p className="text-muted">{L.none}</p>
       ) : (
         <ul className="columns-2 gap-3 md:columns-3 lg:columns-4">
           {shown.map((m, i) => {
@@ -89,7 +90,7 @@ export function GalleryGrid({ items }: { items: MediaItem[] }) {
                   }}
                   className="group relative block w-full overflow-hidden rounded-card bg-white text-left"
                   style={{ aspectRatio: ratio }}
-                  aria-label={`Hap: ${m.caption ?? m.title}`}
+                  aria-label={`${L.open}: ${m.caption ?? m.title}`}
                 >
                   {thumb ? (
                     <Image
@@ -134,7 +135,7 @@ export function GalleryGrid({ items }: { items: MediaItem[] }) {
                 {(open ?? 0) + 1} / {shown.length}
               </p>
               <button ref={closeBtn} type="button" onClick={close} className="inline-flex min-h-11 items-center gap-2 rounded-pill border border-white/25 px-4 font-semibold">
-                <X aria-hidden className="size-4" /> Mbyll
+                <X aria-hidden className="size-4" /> {t(locale).close}
               </button>
             </div>
             <div className="relative flex flex-1 items-center justify-center px-4 md:px-20" onClick={(e) => e.target === e.currentTarget && close()}>
@@ -149,16 +150,16 @@ export function GalleryGrid({ items }: { items: MediaItem[] }) {
                   <Image src={asset(current.url)} alt={current.caption ?? current.title} fill sizes="100vw" className="object-contain" />
                 ) : (
                   <div className="flex h-full items-center">
-                    <VideoEmbed url={current.url} title={current.title} poster={current.thumbnail_url} />
+                    <VideoEmbed url={current.url} title={current.title} poster={current.thumbnail_url} playLabel={L.play} />
                   </div>
                 )}
               </motion.div>
               {shown.length > 1 && (
                 <>
-                  <button type="button" aria-label="E mëparshmja" onClick={() => setOpen((o) => ((o ?? 0) - 1 + shown.length) % shown.length)} className="absolute left-2 top-1/2 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 hover:bg-white/20 md:left-6">
+                  <button type="button" aria-label={L.prev} onClick={() => setOpen((o) => ((o ?? 0) - 1 + shown.length) % shown.length)} className="absolute left-2 top-1/2 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 hover:bg-white/20 md:left-6">
                     <ChevronLeft aria-hidden className="size-6" />
                   </button>
-                  <button type="button" aria-label="Tjetra" onClick={() => setOpen((o) => ((o ?? 0) + 1) % shown.length)} className="absolute right-2 top-1/2 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 hover:bg-white/20 md:right-6">
+                  <button type="button" aria-label={L.next} onClick={() => setOpen((o) => ((o ?? 0) + 1) % shown.length)} className="absolute right-2 top-1/2 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 hover:bg-white/20 md:right-6">
                     <ChevronRight aria-hidden className="size-6" />
                   </button>
                 </>

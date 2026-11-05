@@ -1,13 +1,14 @@
 "use client";
 
-import { animate, useInView, useReducedMotion } from "motion/react";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
+import { animate, useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 /** Counts up to a real value once visible. The final value is server-rendered. */
 export function Counter({ value, suffix }: { value: number; suffix?: string | null }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "0px 0px -15% 0px" });
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const [display, setDisplay] = useState<number | null>(null);
 
   useEffect(() => {

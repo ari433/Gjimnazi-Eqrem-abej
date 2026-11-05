@@ -1,13 +1,16 @@
 "use client";
 
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { useEffect, useRef } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MaskText } from "@/components/motion/MaskText";
 import { ButtonLink } from "@/components/ui/Button";
 import { Magnetic } from "@/components/motion/Magnetic";
 import type { SiteContent } from "@/lib/types";
+import { lp, type Locale } from "@/lib/i18n";
+import { asset } from "@/lib/utils";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -18,12 +21,12 @@ const EASE = [0.16, 1, 0.3, 1] as const;
  * brand gradient. On scroll the letter grows until its stroke fills the
  * screen and hands over to the navy introduction below.
  */
-export function Hero({ hero }: { hero: SiteContent["hero"] }) {
+export function Hero({ hero, locale = "sq" }: { hero: SiteContent["hero"]; locale?: Locale }) {
   const wrap = useRef<HTMLElement>(null);
   const glyph = useRef<HTMLSpanElement>(null);
   const copy = useRef<HTMLDivElement>(null);
   const cover = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
 
   useEffect(() => {
     if (reduce || !wrap.current) return;
@@ -47,9 +50,9 @@ export function Hero({ hero }: { hero: SiteContent["hero"] }) {
 
   const fill = hero.image_url
     ? {
-        backgroundImage: `linear-gradient(180deg, rgba(10,24,56,0.05), rgba(10,24,56,0.25)), url("${hero.image_url}")`,
+        backgroundImage: `linear-gradient(180deg, rgba(43,75,255,0.10), rgba(10,24,56,0.35)), url("${asset(hero.image_url)}")`,
         backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundPosition: "50% 35%",
       }
     : {
         backgroundImage:
@@ -66,15 +69,15 @@ export function Hero({ hero }: { hero: SiteContent["hero"] }) {
         {/* The letter */}
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-[-8vw] flex items-start pt-16 md:right-[3vw] md:items-start md:pt-[11svh]"
+          className="pointer-events-none absolute inset-x-0 inset-y-0 flex items-start justify-center pt-[4.5rem] md:inset-x-auto md:right-[3vw] md:justify-end md:pt-[11svh]"
           initial={reduce ? false : { clipPath: "inset(100% 0 0 0)" }}
           animate={{ clipPath: "inset(0% 0 0 0)" }}
           transition={{ duration: 1.5, ease: EASE, delay: 0.15 }}
         >
           <span
             ref={glyph}
-            className="block select-none bg-clip-text px-[0.04em] pb-[0.16em] font-bold leading-[1.02] text-transparent will-change-transform [transform-origin:24%_42%] [-webkit-background-clip:text]"
-            style={{ ...fill, fontSize: "min(70svh, 86vw)" }}
+            className="block select-none bg-clip-text px-[0.04em] pb-[0.16em] text-[min(52svh,104vw)] font-bold leading-[1.02] text-transparent will-change-transform [transform-origin:24%_42%] [-webkit-background-clip:text] md:text-[min(70svh,86vw)]"
+            style={fill}
           >
             Ç
           </span>
@@ -109,11 +112,11 @@ export function Hero({ hero }: { hero: SiteContent["hero"] }) {
               transition={{ duration: 1, ease: EASE, delay: 1.05 }}
             >
               <Magnetic>
-                <ButtonLink href={hero.primary_cta.href} variant="ink">
+                <ButtonLink href={lp(locale, hero.primary_cta.href)} variant="ink">
                   {hero.primary_cta.label}
                 </ButtonLink>
               </Magnetic>
-              <ButtonLink href={hero.secondary_cta.href} variant="light" icon={false} className="border border-ink/10">
+              <ButtonLink href={lp(locale, hero.secondary_cta.href)} variant="light" icon={false} className="border border-ink/10">
                 {hero.secondary_cta.label}
               </ButtonLink>
             </motion.div>

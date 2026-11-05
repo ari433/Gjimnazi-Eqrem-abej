@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { SiteSectionEditor } from "@/components/admin/SiteSectionEditor";
 import { requireRole } from "@/lib/admin/auth";
-import { SITE_KEYS, SITE_LABELS } from "@/lib/admin/site-schemas";
-import { siteContent } from "@/lib/content/seed";
+import { baseKey, SITE_KEYS, SITE_LABELS } from "@/lib/admin/site-schemas";
+import { siteContent, siteContentDe } from "@/lib/content/seed";
 import { getServerClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "Ballina dhe faqja" };
@@ -36,7 +36,7 @@ export default async function SiteContentPage() {
             <p className="mb-4 mt-1 text-muted">{SITE_LABELS[k].help}</p>
             <SiteSectionEditor
               sectionKey={k}
-              initialValue={stored[k] ?? (k === "history" || k === "socials" ? siteContent[k] : { ...(siteContent[k] as object) })}
+              initialValue={stored[k] ?? structuredClone((k.endsWith("_de") ? siteContentDe : siteContent)[baseKey(k)])}
             />
           </section>
         ))}

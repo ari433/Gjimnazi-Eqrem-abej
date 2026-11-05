@@ -4,16 +4,18 @@ import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { SchoolEvent } from "@/lib/types";
 import { cn, monthLabel as fmtMonth } from "@/lib/utils";
+import { dates, t, type Locale } from "@/lib/i18n";
 
 const TZ = "Europe/Belgrade";
-const WEEKDAYS = ["Hë", "Ma", "Më", "En", "Pr", "Sh", "Di"];
 
 function ymd(d: Date) {
   return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
 }
 
 /** Month grid with event markers. Days with events link to the list below. */
-export function MonthCalendar({ events, today }: { events: SchoolEvent[]; today: string }) {
+export function MonthCalendar({ events, today, locale = "sq" }: { events: SchoolEvent[]; today: string; locale?: Locale }) {
+  const L = t(locale).events_;
+  const WEEKDAYS = dates.WEEKDAYS_SHORT[locale];
   const [cursor, setCursor] = useState(() => {
     const [y, m] = today.split("-").map(Number);
     return { y, m: m - 1 };
@@ -34,7 +36,7 @@ export function MonthCalendar({ events, today }: { events: SchoolEvent[]; today:
   const cells: (number | null)[] = [...Array(offset).fill(null), ...Array.from({ length: daysInMonth }, (_, i) => i + 1)];
   while (cells.length % 7) cells.push(null);
 
-  const monthLabel = fmtMonth(cursor.y, cursor.m);
+  const monthLabel = fmtMonth(cursor.y, cursor.m, locale);
   const move = (d: number) =>
     setCursor((c) => {
       const m = c.m + d;
@@ -44,14 +46,14 @@ export function MonthCalendar({ events, today }: { events: SchoolEvent[]; today:
   return (
     <div className="rounded-card bg-white p-5 md:p-8">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold capitalize tracking-[-0.03em]" aria-live="polite">
+        <h2 className="text-2xl font-bold tracking-[-0.03em] first-letter:uppercase" aria-live="polite">
           {monthLabel}
         </h2>
         <div className="flex gap-2">
-          <button type="button" onClick={() => move(-1)} aria-label="Muaji i kaluar" className="grid size-11 place-items-center rounded-full border border-line hover:border-ink">
+          <button type="button" onClick={() => move(-1)} aria-label={L.prevMonth} className="grid size-11 place-items-center rounded-full border border-line hover:border-ink">
             <ChevronLeft aria-hidden className="size-5" />
           </button>
-          <button type="button" onClick={() => move(1)} aria-label="Muaji tjetër" className="grid size-11 place-items-center rounded-full border border-line hover:border-ink">
+          <button type="button" onClick={() => move(1)} aria-label={L.nextMonth} className="grid size-11 place-items-center rounded-full border border-line hover:border-ink">
             <ChevronRight aria-hidden className="size-5" />
           </button>
         </div>

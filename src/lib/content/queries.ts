@@ -2,6 +2,8 @@ import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
 import { getPublicClient } from "@/lib/supabase/public";
 import * as seed from "./seed";
+import { localize, localizeAll } from "./localize";
+import type { Locale } from "@/lib/i18n";
 import type {
   Achievement,
   Announcement,
@@ -22,13 +24,15 @@ import type {
 /**
  * Public data access layer.
  *
- * Every reader is a `use cache` function tagged by content type. The admin
- * panel calls `revalidateTag`/`updateTag` for the matching tag after a write,
- * and the short `minutes` lifetime makes scheduled posts appear on time.
+ * Raw readers (`raw*`) are `use cache` functions tagged by content type; the
+ * admin panel invalidates the tag after each write, and the short `minutes`
+ * lifetime makes scheduled posts appear on time. Exported readers take a
+ * locale and swap in German fields on top of the cached rows, so both
+ * languages share one cache entry.
  *
- * With Supabase configured, rows come from the database through the anon role
- * (RLS only exposes published rows whose publish time has passed). Without it,
- * the site renders the local seed so it is never blank in development.
+ * With Supabase configured, rows come through the anon role (RLS only exposes
+ * published rows whose publish time has passed). Without it, the local seed
+ * is used so the site is never blank.
  */
 
 export const TAGS = {
@@ -48,319 +52,240 @@ export const TAGS = {
 
 function live<T extends { status: string; published_at: string | null }>(rows: T[]): T[] {
   const now = Date.now();
-  return rows.filter(
-    (r) => r.status === "published" && (!r.published_at || new Date(r.published_at).getTime() <= now),
-  );
+  return rows.filter((r) => r.status === "published" && (!r.published_at || new Date(r.published_at).getTime() <= now));
 }
 
-function byDateDesc<T extends { published_at: string | null }>(a: T, b: T) {
-  return (b.published_at ?? "").localeCompare(a.published_at ?? "");
-}
+const byDateDesc = <T extends { published_at: string | null }>(a: T, b: T) => (b.published_at ?? "").localeCompare(a.published_at ?? "");
+const bySort = <T extends { sort_order: number }>(a: T, b: T) => a.sort_order - b.sort_order;
 
 function logError(scope: string, error: unknown) {
   console.error(`[content:${scope}]`, error);
 }
 
-/* ---------------------------------------------------------------- site */
+/** Runs a Supabase list query, or returns the seed when Supabase is not configured. */
+async function list<T>(scope: string, fallback: () => T[], run: (sb: NonNullable<ReturnType<typeof getPublicClient>>) => PromiseLike<{ data: unknown; error: unknown }>): Promise<T[]> {
+  const sb = getPublicClient();
+  if (!sb) return fallback();
+  const { data, error } = await run(sb);
+  if (error) {
+    logError(scope, error);
+    return [];
+  }
+  return (data ?? []) as T[];
+}
 
-export async function getSiteContent(): Promise<SiteContent> {
+/* ================================================================ site */
+
+const SITE_KEYS = ["hero", "intro", "history", "enrollment", "contact", "socials", "student_info"] as const;
+
+async function rawSiteRows(): Promise<Record<string, unknown> | null> {
   "use cache";
   cacheTag(TAGS.site);
   cacheLife("minutes");
   const sb = getPublicClient();
-  if (!sb) return seed.siteContent;
+  if (!sb) return null;
   const { data, error } = await sb.from("site_content").select("key, value");
   if (error) {
     logError("site", error);
-    return seed.siteContent;
+    return null;
   }
-  const merged = { ...seed.siteContent } as Record<string, unknown>;
-  for (const row of data ?? []) {
-    const base = merged[row.key];
-    merged[row.key] =
-      base && typeof base === "object" && !Array.isArray(base) && row.value && typeof row.value === "object"
-        ? { ...(base as object), ...(row.value as object) }
-        : row.value;
+  return Object.fromEntries((data ?? []).map((r) => [r.key as string, r.value]));
+}
+
+export async function getSiteContent(locale: Locale = "sq"): Promise<SiteContent> {
+  const base = locale === "de" ? seed.siteContentDe : seed.siteContent;
+  const rows = await rawSiteRows();
+  if (!rows) return base;
+  const merged = { ...base } as Record<string, unknown>;
+  for (const key of SITE_KEYS) {
+    // Contact details and social links are shared; text blocks are per language
+    // ("<key>_de" rows). German never falls back to Albanian text.
+    const shared = key === "contact" || key === "socials";
+    const value = locale === "de" && !shared ? rows[`${key}_de`] : rows[key];
+    if (value === undefined) continue;
+    const prev = merged[key];
+    merged[key] =
+      prev && typeof prev === "object" && !Array.isArray(prev) && value && typeof value === "object" && !Array.isArray(value)
+        ? { ...(prev as object), ...(value as object), ...(key === "contact" && locale === "de" ? { city: (prev as SiteContent["contact"]).city } : {}) }
+        : value;
   }
   return merged as unknown as SiteContent;
 }
 
-export async function getStats(): Promise<Stat[]> {
+async function rawStats(): Promise<Stat[]> {
   "use cache";
   cacheTag(TAGS.stats);
   cacheLife("hours");
-  const sb = getPublicClient();
-  if (!sb) return seed.stats.filter((s) => s.verification === "verified");
-  const { data, error } = await sb.from("stats").select("*").eq("verification", "verified").order("sort_order");
-  if (error) {
-    logError("stats", error);
-    return [];
-  }
-  return (data ?? []) as Stat[];
+  return list("stats", () => seed.stats.filter((s) => s.verification === "verified"), (sb) =>
+    sb.from("stats").select("*").eq("verification", "verified").order("sort_order"),
+  );
 }
+export const getStats = async (locale: Locale = "sq") => localizeAll(await rawStats(), locale, "label");
 
-/* ---------------------------------------------------------------- news */
+/* ================================================================ news */
 
-export async function getNews(limit = 50): Promise<NewsArticle[]> {
+async function rawNews(limit: number): Promise<NewsArticle[]> {
   "use cache";
   cacheTag(TAGS.news);
   cacheLife("minutes");
-  const sb = getPublicClient();
-  if (!sb) return live(seed.news).sort(byDateDesc).slice(0, limit);
-  const { data, error } = await sb
-    .from("news")
-    .select("*")
-    .order("published_at", { ascending: false })
-    .limit(limit);
-  if (error) {
-    logError("news", error);
-    return [];
-  }
-  return (data ?? []) as NewsArticle[];
+  const rows = await list<NewsArticle>("news", () => live(seed.news).sort(byDateDesc).slice(0, limit), (sb) =>
+    sb.from("news").select("*").order("published_at", { ascending: false }).limit(limit),
+  );
+  return rows.map((n) => ({ ...n, gallery: n.gallery ?? [], show_date: n.show_date ?? true }));
+}
+export const getNews = async (limit = 50, locale: Locale = "sq") => localizeAll(await rawNews(limit), locale, "title");
+
+export async function getNewsArticle(slug: string, locale: Locale = "sq"): Promise<NewsArticle | null> {
+  const all = await rawNews(500);
+  const hit = all.find((n) => n.slug === slug);
+  return hit ? localize(hit, locale, "title") : null;
 }
 
-export async function getNewsArticle(slug: string): Promise<NewsArticle | null> {
-  "use cache";
-  cacheTag(TAGS.news, `news:${slug}`);
-  cacheLife("minutes");
-  const sb = getPublicClient();
-  if (!sb) return live(seed.news).find((n) => n.slug === slug) ?? null;
-  const { data, error } = await sb.from("news").select("*").eq("slug", slug).maybeSingle();
-  if (error) logError("news-article", error);
-  return (data as NewsArticle) ?? null;
-}
+/* ======================================================= announcements */
 
-export async function getNewsSlugs(): Promise<string[]> {
-  const items = await getNews(200);
-  return items.map((n) => n.slug);
-}
-
-/* ------------------------------------------------------- announcements */
-
-export async function getAnnouncements(limit = 50): Promise<Announcement[]> {
+async function rawAnnouncements(limit: number): Promise<Announcement[]> {
   "use cache";
   cacheTag(TAGS.announcements);
   cacheLife("minutes");
   const now = Date.now();
   const notExpired = (a: Announcement) => !a.expires_at || new Date(a.expires_at).getTime() > now;
-  const sb = getPublicClient();
-  if (!sb) return live(seed.announcements).filter(notExpired).sort(byDateDesc).slice(0, limit);
-  const { data, error } = await sb
-    .from("announcements")
-    .select("*")
-    .order("published_at", { ascending: false })
-    .limit(limit);
-  if (error) {
-    logError("announcements", error);
-    return [];
-  }
-  return ((data ?? []) as Announcement[]).filter(notExpired);
+  const rows = await list<Announcement>("announcements", () => live(seed.announcements).sort(byDateDesc), (sb) =>
+    sb.from("announcements").select("*").order("published_at", { ascending: false }).limit(limit),
+  );
+  return rows.filter(notExpired).slice(0, limit);
 }
+export const getAnnouncements = async (limit = 50, locale: Locale = "sq") => localizeAll(await rawAnnouncements(limit), locale, "title");
 
-/* -------------------------------------------------------------- events */
+/* ============================================================== events */
 
-export async function getEvents(): Promise<SchoolEvent[]> {
+async function rawEventsSplit(): Promise<{ upcoming: SchoolEvent[]; past: SchoolEvent[]; all: SchoolEvent[]; today: string }> {
   "use cache";
   cacheTag(TAGS.events);
   cacheLife("minutes");
-  const sb = getPublicClient();
-  if (!sb) return live(seed.events).sort((a, b) => a.starts_at.localeCompare(b.starts_at));
-  const { data, error } = await sb.from("events").select("*").order("starts_at", { ascending: true });
-  if (error) {
-    logError("events", error);
-    return [];
-  }
-  return (data ?? []) as SchoolEvent[];
-}
-
-/**
- * Events split around the start of today. Computed inside a cached scope so
- * the clock read happens once per cache window, not during prerender.
- */
-export async function getEventsSplit(): Promise<{ upcoming: SchoolEvent[]; past: SchoolEvent[]; today: string }> {
-  "use cache";
-  cacheTag(TAGS.events);
-  cacheLife("minutes");
-  const all = await getEvents();
-  const startOfToday = new Date();
-  startOfToday.setHours(0, 0, 0, 0);
-  const t = startOfToday.getTime();
+  const all = await list<SchoolEvent>("events", () => live(seed.events).sort((a, b) => a.starts_at.localeCompare(b.starts_at)), (sb) =>
+    sb.from("events").select("*").order("starts_at", { ascending: true }),
+  );
+  // Clock read inside the cached scope: once per cache window, not per prerender.
+  const now = new Date();
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Belgrade", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+  const startOfToday = new Date(`${today}T00:00:00`).getTime();
   const end = (e: SchoolEvent) => new Date(e.ends_at ?? e.starts_at).getTime();
-  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Belgrade", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
-  return {
-    today,
-    upcoming: all.filter((e) => end(e) >= t),
-    past: all.filter((e) => end(e) < t).reverse(),
-  };
+  return { all, today, upcoming: all.filter((e) => end(e) >= startOfToday), past: all.filter((e) => end(e) < startOfToday).reverse() };
 }
 
-export async function getUpcomingEvents(limit = 6): Promise<SchoolEvent[]> {
-  const { upcoming } = await getEventsSplit();
-  return upcoming.slice(0, limit);
+export async function getEventsSplit(locale: Locale = "sq") {
+  const r = await rawEventsSplit();
+  return { today: r.today, all: localizeAll(r.all, locale, "title"), upcoming: localizeAll(r.upcoming, locale, "title"), past: localizeAll(r.past, locale, "title") };
 }
+export const getUpcomingEvents = async (limit = 6, locale: Locale = "sq") => (await getEventsSplit(locale)).upcoming.slice(0, limit);
 
-/* ------------------------------------------------------------ programs */
+/* ============================================================ programs */
 
-export async function getPrograms(): Promise<Program[]> {
+async function rawPrograms(): Promise<{ programs: Program[]; subjects: Subject[] }> {
   "use cache";
   cacheTag(TAGS.programs);
   cacheLife("hours");
   const sb = getPublicClient();
-  if (!sb) return live(seed.programs).sort((a, b) => a.sort_order - b.sort_order);
-  const { data, error } = await sb.from("programs").select("*").order("sort_order");
-  if (error) {
-    logError("programs", error);
-    return [];
-  }
-  return (data ?? []) as Program[];
+  if (!sb) return { programs: live(seed.programs).sort(bySort), subjects: [...seed.subjects].sort(bySort) };
+  const [p, s] = await Promise.all([sb.from("programs").select("*").order("sort_order"), sb.from("subjects").select("*").order("sort_order")]);
+  if (p.error) logError("programs", p.error);
+  return { programs: (p.data ?? []) as Program[], subjects: (s.data ?? []) as Subject[] };
 }
 
-export async function getProgram(slug: string): Promise<{ program: Program; subjects: Subject[] } | null> {
-  "use cache";
-  cacheTag(TAGS.programs, `program:${slug}`);
-  cacheLife("hours");
-  const sb = getPublicClient();
-  if (!sb) {
-    const program = live(seed.programs).find((p) => p.slug === slug);
-    if (!program) return null;
-    return {
-      program,
-      subjects: seed.subjects.filter((s) => s.program_id === program.id).sort((a, b) => a.sort_order - b.sort_order),
-    };
-  }
-  const { data: program, error } = await sb.from("programs").select("*").eq("slug", slug).maybeSingle();
-  if (error) logError("program", error);
+export async function getPrograms(locale: Locale = "sq"): Promise<(Program & { subjectNames: string[] })[]> {
+  const { programs, subjects } = await rawPrograms();
+  return programs.map((p) => ({
+    ...localize(p, locale, "name"),
+    subjectNames: localizeAll(subjects.filter((s) => s.program_id === p.id), locale).map((s) => s.name),
+  }));
+}
+
+export async function getProgram(slug: string, locale: Locale = "sq"): Promise<{ program: Program; subjects: Subject[] } | null> {
+  const { programs, subjects } = await rawPrograms();
+  const program = programs.find((p) => p.slug === slug);
   if (!program) return null;
-  const { data: subjects } = await sb
-    .from("subjects")
-    .select("*")
-    .eq("program_id", program.id)
-    .order("sort_order");
-  return { program: program as Program, subjects: (subjects ?? []) as Subject[] };
+  return { program: localize(program, locale, "name"), subjects: localizeAll(subjects.filter((s) => s.program_id === program.id), locale, "name") };
 }
 
-/* --------------------------------------------------------------- staff */
+/* =============================================================== staff */
 
-export async function getStaff(): Promise<StaffMember[]> {
+async function rawStaff(): Promise<StaffMember[]> {
   "use cache";
   cacheTag(TAGS.staff);
   cacheLife("hours");
-  const sb = getPublicClient();
-  if (!sb) return live(seed.staff).sort((a, b) => a.sort_order - b.sort_order);
-  const { data, error } = await sb.from("staff").select("*").order("sort_order");
-  if (error) {
-    logError("staff", error);
-    return [];
-  }
-  return (data ?? []) as StaffMember[];
+  return list("staff", () => live(seed.staff).sort(bySort), (sb) => sb.from("staff").select("*").order("sort_order"));
 }
+export const getStaff = async (locale: Locale = "sq") => localizeAll(await rawStaff(), locale, "role_title");
 
-/* --------------------------------------------------------------- clubs */
+/* =============================================================== clubs */
 
-export async function getClubs(): Promise<Club[]> {
+async function rawClubs(): Promise<Club[]> {
   "use cache";
   cacheTag(TAGS.clubs);
   cacheLife("hours");
-  const sb = getPublicClient();
-  if (!sb) return live(seed.clubs).sort((a, b) => a.sort_order - b.sort_order);
-  const { data, error } = await sb.from("clubs").select("*").order("sort_order");
-  if (error) {
-    logError("clubs", error);
-    return [];
-  }
-  return (data ?? []) as Club[];
+  return list("clubs", () => live(seed.clubs).sort(bySort), (sb) => sb.from("clubs").select("*").order("sort_order"));
 }
+export const getClubs = async (locale: Locale = "sq") => localizeAll(await rawClubs(), locale, "name");
 
-export async function getMediaClub(): Promise<{
-  club: Club | null;
-  members: ClubMember[];
-  media: MediaItem[];
-  projects: StudentProject[];
-}> {
+async function rawMediaClubExtras(clubId: string): Promise<{ members: ClubMember[]; media: MediaItem[]; projects: StudentProject[] }> {
   "use cache";
   cacheTag(TAGS.clubs, TAGS.media, TAGS.projects);
   cacheLife("minutes");
-  const clubs = await getClubs();
-  const club = clubs.find((c) => c.is_media_club) ?? null;
   const sb = getPublicClient();
-  if (!club) return { club: null, members: [], media: [], projects: [] };
   if (!sb) {
     return {
-      club,
-      members: seed.clubMembers.filter((m) => m.club_id === club.id),
-      media: live(seed.media).filter((m) => m.club_id === club.id),
-      projects: live(seed.projects).filter((p) => p.club_id === club.id),
+      members: seed.clubMembers.filter((m) => m.club_id === clubId),
+      media: live(seed.media).filter((m) => m.club_id === clubId),
+      projects: live(seed.projects).filter((p) => p.club_id === clubId),
     };
   }
   const [members, media, projects] = await Promise.all([
-    sb.from("club_members").select("*").eq("club_id", club.id).order("sort_order"),
-    sb.from("media_items").select("*").eq("club_id", club.id).order("published_at", { ascending: false }),
-    sb.from("projects").select("*").eq("club_id", club.id).order("published_at", { ascending: false }),
+    sb.from("club_members").select("*").eq("club_id", clubId).order("sort_order"),
+    sb.from("media_items").select("*").eq("club_id", clubId).order("published_at", { ascending: false }),
+    sb.from("projects").select("*").eq("club_id", clubId).order("published_at", { ascending: false }),
   ]);
-  return {
-    club,
-    members: (members.data ?? []) as ClubMember[],
-    media: (media.data ?? []) as MediaItem[],
-    projects: (projects.data ?? []) as StudentProject[],
-  };
+  return { members: (members.data ?? []) as ClubMember[], media: (media.data ?? []) as MediaItem[], projects: (projects.data ?? []) as StudentProject[] };
 }
 
-/* ------------------------------------------------- projects & awards */
+export async function getMediaClub(locale: Locale = "sq") {
+  const club = (await getClubs(locale)).find((c) => c.is_media_club) ?? null;
+  if (!club) return { club: null, members: [] as ClubMember[], media: [] as MediaItem[], projects: [] as StudentProject[] };
+  const x = await rawMediaClubExtras(club.id);
+  return { club, members: localizeAll(x.members, locale), media: localizeAll(x.media, locale, "title"), projects: localizeAll(x.projects, locale, "title") };
+}
 
-export async function getProjects(): Promise<StudentProject[]> {
+/* ================================================== projects & awards */
+
+async function rawProjects(): Promise<StudentProject[]> {
   "use cache";
   cacheTag(TAGS.projects);
   cacheLife("minutes");
-  const sb = getPublicClient();
-  if (!sb) return live(seed.projects).sort(byDateDesc);
-  const { data, error } = await sb.from("projects").select("*").order("published_at", { ascending: false });
-  if (error) {
-    logError("projects", error);
-    return [];
-  }
-  return (data ?? []) as StudentProject[];
+  return list("projects", () => live(seed.projects).sort(byDateDesc), (sb) => sb.from("projects").select("*").order("published_at", { ascending: false }));
 }
+export const getProjects = async (locale: Locale = "sq") => localizeAll(await rawProjects(), locale, "title");
 
-export async function getAchievements(): Promise<Achievement[]> {
+async function rawAchievements(): Promise<Achievement[]> {
   "use cache";
   cacheTag(TAGS.achievements);
   cacheLife("hours");
-  const sb = getPublicClient();
-  if (!sb) return live(seed.achievements);
-  const { data, error } = await sb.from("achievements").select("*").order("year", { ascending: false });
-  if (error) {
-    logError("achievements", error);
-    return [];
-  }
-  return (data ?? []) as Achievement[];
+  return list("achievements", () => live(seed.achievements), (sb) => sb.from("achievements").select("*").order("year", { ascending: false }));
 }
+export const getAchievements = async (locale: Locale = "sq") => localizeAll(await rawAchievements(), locale, "title");
 
-/* --------------------------------------------------- media & documents */
+/* ================================================== media & documents */
 
-export async function getMedia(): Promise<MediaItem[]> {
+async function rawMedia(): Promise<MediaItem[]> {
   "use cache";
   cacheTag(TAGS.media);
   cacheLife("minutes");
-  const sb = getPublicClient();
-  if (!sb) return live(seed.media).sort(byDateDesc);
-  const { data, error } = await sb.from("media_items").select("*").order("published_at", { ascending: false });
-  if (error) {
-    logError("media", error);
-    return [];
-  }
-  return (data ?? []) as MediaItem[];
+  return list("media", () => live(seed.media).sort(byDateDesc), (sb) => sb.from("media_items").select("*").order("published_at", { ascending: false }));
 }
+export const getMedia = async (locale: Locale = "sq") => localizeAll(await rawMedia(), locale, "title");
 
-export async function getDocuments(): Promise<SchoolDocument[]> {
+async function rawDocuments(): Promise<SchoolDocument[]> {
   "use cache";
   cacheTag(TAGS.documents);
   cacheLife("hours");
-  const sb = getPublicClient();
-  if (!sb) return live(seed.documents).sort(byDateDesc);
-  const { data, error } = await sb.from("documents").select("*").order("published_at", { ascending: false });
-  if (error) {
-    logError("documents", error);
-    return [];
-  }
-  return (data ?? []) as SchoolDocument[];
+  return list("documents", () => live(seed.documents).sort(byDateDesc), (sb) => sb.from("documents").select("*").order("published_at", { ascending: false }));
 }
+export const getDocuments = async (locale: Locale = "sq") => localizeAll(await rawDocuments(), locale, "title");

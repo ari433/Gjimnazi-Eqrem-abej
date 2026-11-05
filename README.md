@@ -28,6 +28,7 @@ Without Supabase variables the public site renders from the local, verified seed
 1. Create a Supabase project.
 2. Run the migration, then the seed, in the SQL editor (or with the Supabase CLI):
    - `supabase/migrations/20261105120000_init_schema.sql` — tables, RLS policies, role helpers, storage buckets
+   - `supabase/migrations/20261106090000_german_and_media_fields.sql` — German (`*_de`) columns, article galleries and source links, staff video, achievement links
    - `supabase/seed.sql` — verified starting content (generated from the local seed, see below)
 3. Set environment variables (`.env.local` locally, Project → Settings → Environment Variables on Vercel):
 
@@ -46,6 +47,13 @@ Without Supabase variables the public site renders from the local, verified seed
    ```
 
    From then on, admins invite and manage everyone else at `/admin/perdoruesit`.
+
+## Two languages: Albanian and German
+
+- Albanian lives at `/`, German at `/de` (same slugs: `/de/lajme/...`). The header switcher keeps the current page.
+- Every content type has German twins of its text fields (`title_de`, `body_de`, …). In the admin they sit in the collapsible **Përkthimi në gjermanisht** section of each form; the homepage blocks have their own "· DE" sections under *Ballina dhe faqja*.
+- An item without a German translation still appears on `/de`, in Albanian, with a short "nur auf Albanisch" note. Nothing is machine-translated at runtime.
+- Interface text (menus, buttons, labels) lives in `src/lib/i18n.ts`. Each page sets `hreflang` alternates for both languages.
 
 ## Roles
 
@@ -72,18 +80,22 @@ The brief forbids invented facts. The codebase enforces that:
 - Statistics only render when verified and always show their source and year.
 - Missing phone, email or opening hours render as "pending", never as placeholders that look real.
 - Local demo items (`is_example`) are labelled "Shembull", describe the website itself, and are never written to the database.
-- Student names (club teams, projects) are only published with consent; the seed contains none.
+- Student names appear only where the school itself published them (student council results, the Bonn delegation, the Play International team).
+- Articles without a known date hide it (`show_date = false`) instead of guessing one.
 
 ### Verified sources used in the seed
 
 - *Plani Zhvillimor i Shkollës 2021–2024* (published by the Municipality of Prishtina): address, profile history (1990 philology profile, 2012–13 building, 2021–22 social-linguistic profile by MASHTI decision 2-854), director, subjects taught, facilities, vision and mission, school activities, and the 2021 figures (696 students, 36 regular teachers, 92% Matura pass rate).
-- The school's previous website: the Instagram account, the director's name, and the German-language programme (kept as **pending** until the school confirms it).
+- The school's previous website: the Instagram account and the director's name.
+- Announcements supplied by the school (November 2026): student council 2026–27, the breast-cancer awareness run, Play International training and project, eTwinning registration, the ZfA seminar in Bonn (27–31 January 2025), the DSD visit and the EduCamp week in Germany — published as news in Albanian and German, with the school's photos in `public/media/`.
+- The German Language Diploma (DSD) programme since 2002–2003, as stated in the school's DSD announcement.
+- Director Shemsedin Beqiri's interview: https://youtu.be/ce6JNTZt5es
 
 ## Real content still needed from the school
 
-1. Photos: a wide hero photo (goes inside the "Ç"), facilities, events. Only with consent for identifiable students.
+1. More photos (facilities, sports, clubs). Only with consent for identifiable students.
 2. Official phone, email and office hours.
-3. Confirmation and details of the German-language programme (partner, certificates, exchanges).
+3. Exact dates for the news articles (currently hidden).
 4. Learning outcomes and post-graduation pathways for each programme; subject hours per grade.
 5. Teaching staff list (names, subjects, optional photos) with each person's consent.
 6. Clubs, mentors and meeting times; Media Club productions, podcast episodes, team (with consent).

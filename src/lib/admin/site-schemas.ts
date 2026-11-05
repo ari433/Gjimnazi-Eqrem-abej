@@ -4,11 +4,11 @@ import { z } from "zod";
 const href = z.string().trim().regex(/^(\/|https?:\/\/|mailto:|tel:|#)/, "Lidhja duhet të fillojë me / ose https://");
 const verification = z.enum(["verified", "pending"]);
 
-export const SITE_SCHEMAS = {
+const BASE = {
   hero: z.object({
     title: z.string().trim().min(3).max(80),
     lede: z.string().trim().max(400),
-    image_url: z.string().trim().url().nullable().or(z.literal("").transform(() => null)),
+    image_url: z.string().trim().regex(/^(\/|https:\/\/)/, "Lidhja e fotos duhet të fillojë me / ose https://").nullable().or(z.literal("").transform(() => null)),
     image_alt: z.string().trim().max(200).nullable(),
     primary_cta: z.object({ label: z.string().trim().min(2).max(40), href }),
     secondary_cta: z.object({ label: z.string().trim().min(2).max(40), href }),
@@ -45,10 +45,25 @@ export const SITE_SCHEMAS = {
   }),
 } as const;
 
+/** Text blocks that have a German twin stored under "<key>_de". */
+export const TRANSLATED_KEYS = ["hero", "intro", "history", "enrollment", "student_info"] as const;
+
+export const SITE_SCHEMAS = {
+  ...BASE,
+  hero_de: BASE.hero,
+  intro_de: BASE.intro,
+  history_de: BASE.history,
+  enrollment_de: BASE.enrollment,
+  student_info_de: BASE.student_info,
+} as const;
+
 export type SiteKey = keyof typeof SITE_SCHEMAS;
+export type BaseSiteKey = keyof typeof BASE;
+/** "hero_de" → "hero" */
+export const baseKey = (k: SiteKey) => k.replace(/_de$/, "") as BaseSiteKey;
 export const SITE_KEYS = Object.keys(SITE_SCHEMAS) as SiteKey[];
 
-export const SITE_LABELS: Record<SiteKey, { title: string; help: string }> = {
+const BASE_LABELS: Record<BaseSiteKey, { title: string; help: string }> = {
   hero: { title: "Hapja e ballinës", help: "Titulli i madh, teksti hyrës, butonat dhe fotoja brenda shkronjës Ç." },
   intro: { title: "Prezantimi", help: "Teksti hyrës, vizioni dhe misioni." },
   history: { title: "Historia", help: "Etapat e kronologjisë në faqen e historisë." },
@@ -57,3 +72,13 @@ export const SITE_LABELS: Record<SiteKey, { title: string; help: string }> = {
   socials: { title: "Rrjetet sociale", help: "Shfaqen vetëm llogaritë e shënuara si të verifikuara." },
   student_info: { title: "Për nxënësit", help: "Kartat në faqen \"Për nxënësit\"." },
 };
+
+export const SITE_LABELS = {
+  ...BASE_LABELS,
+  ...Object.fromEntries(
+    TRANSLATED_KEYS.map((k) => [
+      `${k}_de`,
+      { title: `${BASE_LABELS[k].title} · DE`, help: `Versioni gjermanisht për faqen /de. ${BASE_LABELS[k].help}` },
+    ]),
+  ),
+} as Record<SiteKey, { title: string; help: string }>;

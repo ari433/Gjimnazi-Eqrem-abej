@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { asset, cn } from "@/lib/utils";
 
 /**
  * Image when one exists; otherwise a quiet typographic placeholder in the
@@ -26,7 +26,7 @@ export function MediaFrame({
     return (
       <div className={cn("relative overflow-hidden bg-line", className)}>
         <Image
-          src={src}
+          src={asset(src)}
           alt={alt ?? ""}
           fill
           sizes={sizes}

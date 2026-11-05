@@ -1,12 +1,13 @@
 "use client";
 
-import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
+import { motion, useMotionValue, useSpring } from "motion/react";
 import { useRef, type ReactNode } from "react";
 
 /** Pulls its child slightly toward the pointer. Pointer-only; inert otherwise. */
 export function Magnetic({ children, strength = 0.28, className }: { children: ReactNode; strength?: number; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const sx = useSpring(x, { stiffness: 220, damping: 18, mass: 0.4 });

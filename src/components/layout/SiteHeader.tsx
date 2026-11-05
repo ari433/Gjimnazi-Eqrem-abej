@@ -1,21 +1,25 @@
 "use client";
 
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { ChevronDown, X } from "lucide-react";
-import { NAV } from "@/lib/navigation";
+import { lp, navFor, switchPath, t, type Locale } from "@/lib/i18n";
 import { cn, asset } from "@/lib/utils";
 import { Magnetic } from "@/components/motion/Magnetic";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-export function SiteHeader() {
+export function SiteHeader({ locale }: { locale: Locale }) {
   const pathname = usePathname();
-  const overHero = pathname === "/";
-  const reduce = useReducedMotion();
+  const NAV = navFor(locale);
+  const T = t(locale);
+  const other: Locale = locale === "sq" ? "de" : "sq";
+  const overHero = pathname === "/" || pathname === "/de";
+  const reduce = useReducedMotionSafe();
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [openGroup, setOpenGroup] = useState<number | null>(null);
@@ -65,7 +69,7 @@ export function SiteHeader() {
     };
   }, [menuOpen, openGroup, closeMenu]);
 
-  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
   const solid = scrolled || openGroup !== null || !overHero;
 
   return (
@@ -74,7 +78,7 @@ export function SiteHeader() {
         href="#permbajtja"
         className="fixed left-4 top-4 z-[100] -translate-y-24 rounded-pill bg-ink px-5 py-3 font-semibold text-white focus:translate-y-0"
       >
-        Kalo te përmbajtja
+        {T.skip}
       </a>
 
       <header
@@ -91,15 +95,15 @@ export function SiteHeader() {
           )}
         >
           <div className="shell flex h-[4.5rem] items-center justify-between gap-6 md:h-20">
-            <Link href="/" className="group flex items-center gap-3" aria-label="Gjimnazi Eqrem Çabej, ballina">
+            <Link href={lp(locale, "/")} className="group flex min-w-0 items-center gap-3" aria-label={`Gjimnazi Eqrem Çabej, ${T.home}`}>
               <Image src={asset("/logo.png")} alt="" width={44} height={44} className="size-10 rounded-full md:size-11" priority />
               <span className="leading-[1.05]">
                 <span className="block text-[0.98rem] font-bold tracking-[-0.02em]">Gjimnazi &ldquo;Eqrem Çabej&rdquo;</span>
-                <span className="block text-[0.8rem] text-muted">Prishtinë</span>
+                <span className="block text-[0.8rem] text-muted">{T.city}</span>
               </span>
             </Link>
 
-            <nav aria-label="Navigimi kryesor" className="hidden lg:block">
+            <nav aria-label={T.mainNav} className="hidden lg:block">
               <ul className="flex items-center gap-1">
                 {NAV.map((group, gi) => {
                   const open = openGroup === gi;
@@ -127,13 +131,23 @@ export function SiteHeader() {
               </ul>
             </nav>
 
-            <div className="flex items-center gap-2">
+            <div className="flex shrink-0 items-center gap-2">
+              <Link
+                href={switchPath(pathname, other)}
+                hrefLang={other}
+                lang={other}
+                aria-label={T.switchLabel}
+                title={T.switchTo}
+                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-pill border border-ink/15 bg-white/70 px-3 text-sm font-bold uppercase tracking-wide backdrop-blur transition-colors hover:border-ink"
+              >
+                {other}
+              </Link>
               <Magnetic className="hidden lg:inline-block">
                 <Link
-                  href="/kontakti"
+                  href={lp(locale, "/kontakti")}
                   className="inline-flex min-h-11 items-center rounded-pill bg-ink px-5 text-[0.95rem] font-semibold text-white transition-colors hover:bg-blue"
                 >
-                  Kontakti
+                  {T.contact}
                 </Link>
               </Magnetic>
               <button
@@ -149,7 +163,7 @@ export function SiteHeader() {
                   <span className="h-[1.5px] w-full bg-current" />
                   <span className="h-[1.5px] w-2/3 bg-current" />
                 </span>
-                Menyja
+                {T.menu}
               </button>
             </div>
           </div>
@@ -202,7 +216,7 @@ export function SiteHeader() {
             id={`${panelId}-mobile`}
             role="dialog"
             aria-modal="true"
-            aria-label="Menyja"
+            aria-label={T.menu}
             className="fixed inset-0 z-[60] flex flex-col bg-ink text-white lg:hidden"
             initial={reduce ? { opacity: 0 } : { clipPath: "inset(0 0 100% 0)" }}
             animate={reduce ? { opacity: 1 } : { clipPath: "inset(0 0 0% 0)" }}
@@ -218,10 +232,10 @@ export function SiteHeader() {
                 onClick={closeMenu}
                 className="inline-flex min-h-11 items-center gap-2 rounded-pill border border-white/20 px-4 font-semibold"
               >
-                <X aria-hidden className="size-4" /> Mbyll
+                <X aria-hidden className="size-4" /> {T.close}
               </button>
             </div>
-            <nav aria-label="Navigimi kryesor" className="shell flex-1 overflow-y-auto pb-10 pt-4">
+            <nav aria-label={T.mainNav} className="shell flex-1 overflow-y-auto pb-10 pt-2">
               {NAV.map((group, gi) => (
                 <motion.div
                   key={group.label}
@@ -239,7 +253,7 @@ export function SiteHeader() {
                           onClick={() => setMenuOpen(false)}
                           aria-current={isActive(l.href) ? "page" : undefined}
                           className={cn(
-                            "block py-1.5 text-[1.85rem] font-semibold leading-tight tracking-[-0.03em]",
+                            "block py-1.5 text-[1.6rem] font-semibold leading-tight tracking-[-0.03em]",
                             isActive(l.href) ? "text-blue-soft" : "text-white",
                           )}
                         >
@@ -250,13 +264,24 @@ export function SiteHeader() {
                   </ul>
                 </motion.div>
               ))}
-              <Link
-                href="/kontakti"
-                onClick={() => setMenuOpen(false)}
-                className="mt-4 inline-flex min-h-12 items-center rounded-pill bg-blue px-6 font-semibold"
-              >
-                Kontakti
-              </Link>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Link
+                  href={lp(locale, "/kontakti")}
+                  onClick={() => setMenuOpen(false)}
+                  className="inline-flex min-h-12 items-center rounded-pill bg-blue px-6 font-semibold"
+                >
+                  {T.contact}
+                </Link>
+                <Link
+                  href={switchPath(pathname, other)}
+                  hrefLang={other}
+                  lang={other}
+                  onClick={() => setMenuOpen(false)}
+                  className="inline-flex min-h-12 items-center rounded-pill border border-white/25 px-6 font-semibold"
+                >
+                  {T.switchTo}
+                </Link>
+              </div>
             </nav>
           </motion.div>
         )}

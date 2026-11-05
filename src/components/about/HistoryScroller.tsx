@@ -1,7 +1,8 @@
 "use client";
 
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
 import { useRef, useState } from "react";
-import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 import type { TimelineEntry } from "@/lib/types";
 
 /**
@@ -9,10 +10,10 @@ import type { TimelineEntry } from "@/lib/types";
  * crosses the centre of the viewport. The content is a real ordered list,
  * so it reads correctly without motion or JavaScript.
  */
-export function HistoryScroller({ entries }: { entries: TimelineEntry[] }) {
+export function HistoryScroller({ entries, label = "Kronologjia" }: { entries: TimelineEntry[]; label?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start center", "end center"] });
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
@@ -21,7 +22,7 @@ export function HistoryScroller({ entries }: { entries: TimelineEntry[] }) {
   });
 
   return (
-    <section aria-label="Kronologjia" className="bg-paper pb-10">
+    <section aria-label={label} className="bg-paper pb-10">
       <div ref={ref} className="shell grid gap-10 lg:grid-cols-12">
         <div className="hidden lg:col-span-5 lg:block">
           <div className="sticky top-[22vh] h-[56vh] overflow-hidden">
@@ -48,12 +49,12 @@ export function HistoryScroller({ entries }: { entries: TimelineEntry[] }) {
           {entries.map((e, i) => (
             <li
               key={i}
-              className="flex min-h-[38vh] flex-col justify-center border-t border-line py-12 transition-opacity duration-500 lg:min-h-[56vh]"
+              className="flex flex-col justify-center border-t border-line py-9 transition-opacity duration-500 md:py-12 lg:min-h-[56vh]"
               style={{ opacity: reduce === false && i !== active ? 0.35 : 1 }}
             >
               <p className="text-lg font-semibold text-blue-deep">{e.period}</p>
               <h2 className="mt-2 text-title font-bold">{e.title}</h2>
-              <p className="mt-4 max-w-xl font-serif text-xl leading-relaxed text-ink/80">{e.text}</p>
+              <p className="mt-3 max-w-xl font-serif text-lg leading-relaxed text-ink/80 md:text-xl">{e.text}</p>
             </li>
           ))}
         </ol>

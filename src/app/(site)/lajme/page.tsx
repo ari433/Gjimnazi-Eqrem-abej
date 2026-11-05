@@ -1,24 +1,11 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/ui/PageHero";
-import { NewsBrowser } from "@/components/news/NewsBrowser";
-import { getNews } from "@/lib/content/queries";
+import { pageMeta } from "@/lib/meta";
+import { t } from "@/lib/i18n";
+import { NewsView } from "@/views/NewsView";
 
-export const metadata: Metadata = {
-  title: "Lajmet",
-  description: "Lajmet e Gjimnazit \"Eqrem Çabej\" në Prishtinë.",
-  alternates: { canonical: "/lajme" },
-};
+const T = t("sq");
+export const metadata: Metadata = pageMeta("sq", "/lajme", T.pages.news[0], `${T.pages.news[1]}. Gjimnazi "Eqrem Çabej", ${T.city}.`);
 
-export default async function NewsPage() {
-  const news = await getNews(100);
-  return (
-    <>
-      <PageHero title="Lajmet" crumbs={[{ label: "Lajmet" }]} lede="Çfarë po ndodh në shkollë." />
-      <section className="bg-paper pb-24 md:pb-32">
-        <div className="shell">
-          <NewsBrowser items={news} />
-        </div>
-      </section>
-    </>
-  );
+export default function Page() {
+  return <NewsView locale="sq" />;
 }

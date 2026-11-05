@@ -1,7 +1,7 @@
 // Runs the migration + seed in PGlite with Supabase stand-ins and checks RLS.
 // Usage: npm run test:rls
 import { PGlite } from "@electric-sql/pglite";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 const R = new URL("../supabase", import.meta.url).pathname;
 const db = new PGlite();
 // Minimal Supabase stand-ins: roles, auth.uid(), auth.users, storage tables.
@@ -16,7 +16,9 @@ alter table storage.objects enable row level security;
 grant usage on schema public, auth, storage to anon, authenticated; grant select, insert, update, delete on storage.objects to anon, authenticated;
 grant execute on function auth.uid() to anon, authenticated;
 `);
-await db.exec(readFileSync(`${R}/migrations/20261105120000_init_schema.sql`, "utf8"));
+for (const f of readdirSync(`${R}/migrations`).filter((x) => x.endsWith(".sql")).sort()) {
+  await db.exec(readFileSync(`${R}/migrations/${f}`, "utf8"));
+}
 await db.exec(`grant select, insert, update, delete on all tables in schema public to anon, authenticated;`);
 await db.exec(readFileSync(`${R}/seed.sql`, "utf8"));
 console.log("migration + seed OK");
@@ -36,11 +38,12 @@ let failed = 0;
 const check = (name, cond) => { if (!cond) failed++; console.log((cond ? "PASS " : "FAIL ") + name); };
 
 await db.exec(`insert into public.news (slug,title,status,published_at) values ('pub','Publikuar','published', now() - interval '1 hour'), ('draft-x','Draft','draft',null), ('future','Ardhshem','published', now() + interval '1 day')`);
-let r = await as("anon", null, `select slug from public.news order by slug`);
+const T3 = "slug in ('pub','draft-x','future')";
+let r = await as("anon", null, `select slug from public.news where ${T3} order by slug`);
 check("anon sees only published & due news", r.ok && r.rows.map(x=>x.slug).join()=== "pub");
-r = await as("authenticated", U.viewer, `select slug from public.news`);
+r = await as("authenticated", U.viewer, `select slug from public.news where ${T3}`);
 check("viewer sees only published news", r.ok && r.rows.length === 1);
-r = await as("authenticated", U.contrib, `select slug from public.news`);
+r = await as("authenticated", U.contrib, `select slug from public.news where ${T3}`);
 check("contributor sees drafts", r.ok && r.rows.length === 3);
 r = await as("authenticated", U.contrib, `insert into public.news (slug,title,status) values ('c-draft','Draft kontribuesi','draft')`);
 check("contributor can insert own draft", r.ok);
@@ -75,7 +78,7 @@ check("admin changes roles", r.ok && r.n === 1);
 r = await as("authenticated", U.admin, `update public.profiles set role='viewer' where id='${U.admin}'`);
 check("admin cannot demote self", !r.ok);
 r = await as("anon", null, `select key from public.site_content`);
-check("anon reads site content", r.ok && r.rows.length === 7);
+check("anon reads site content (sq + de blocks)", r.ok && r.rows.length === 12);
 r = await as("anon", null, `update public.site_content set value='{}' where key='hero'`);
 check("anon cannot edit site content", r.ok && r.n === 0);
 r = await as("anon", null, `select count(*)::int c from public.subjects`);
@@ -88,6 +91,10 @@ r = await as("authenticated", U.contrib, `insert into storage.objects (bucket_id
 check("contributor cannot upload documents", !r.ok);
 r = await as("anon", null, `insert into storage.objects (bucket_id,name) values ('media','b.jpg')`);
 check("anon cannot upload", !r.ok);
+r = await as("anon", null, `select title_de, show_date from public.news where slug = 'vizita-ne-gjermani-educamp'`);
+check("seeded German translation readable", r.ok && r.rows[0]?.title_de === "Eine Woche in Deutschland" && r.rows[0]?.show_date === false);
+r = await as("authenticated", U.editor, `insert into public.site_content (key, value) values ('bogus_de', '{}')`);
+check("unknown site_content key rejected", !r.ok);
 const pa = (await db.query(`select published_at from public.events where slug='e'`)).rows[0];
 check("published_at stamped on publish", pa.published_at !== null);
 if (failed) { console.error(`${failed} check(s) failed`); process.exit(1); } else console.log("All RLS checks passed");

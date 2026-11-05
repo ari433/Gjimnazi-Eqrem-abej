@@ -1,35 +1,21 @@
-import Link from "next/link";
-import { CalendarDays } from "lucide-react";
 import type { SchoolEvent } from "@/lib/types";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { EmptyState } from "@/components/ui/EmptyState";
 import { EventRow } from "@/components/events/EventRow";
+import { lp, t, type Locale } from "@/lib/i18n";
 
-export function EventsSection({ events }: { events: SchoolEvent[] }) {
+/** Hidden when nothing is coming up: an empty calendar block adds nothing to the homepage. */
+export function EventsSection({ events, locale = "sq" }: { events: SchoolEvent[]; locale?: Locale }) {
+  if (events.length === 0) return null;
+  const T = t(locale);
   return (
-    <section aria-labelledby="events-title" className="bg-white py-24 md:py-36">
+    <section aria-labelledby="events-title" className="bg-white py-20 md:py-32">
       <div className="shell">
-        <SectionHeading
-          id="events-title"
-          title="Në kalendar"
-          lede="Aktivitetet që vijnë në shkollë."
-          link={{ href: "/kalendari", label: "Kalendari i plotë" }}
-        />
-        {events.length === 0 ? (
-          <EmptyState icon={CalendarDays} title="Asnjë aktivitet i planifikuar" className="mt-14">
-            Aktivitetet e reja shfaqen këtu sapo të publikohen. Shiko{" "}
-            <Link href="/njoftimet" className="link-underline font-semibold text-ink">
-              njoftimet
-            </Link>{" "}
-            për informata të tjera.
-          </EmptyState>
-        ) : (
-          <ul className="mt-14">
-            {events.map((e) => (
-              <EventRow key={e.id} event={e} />
-            ))}
-          </ul>
-        )}
+        <SectionHeading id="events-title" title={T.home_.eventsTitle} lede={T.pages.calendar[1]} link={{ href: lp(locale, "/kalendari"), label: T.home_.fullCalendar }} />
+        <ul className="mt-10 md:mt-14">
+          {events.map((e) => (
+            <EventRow key={e.id} event={e} locale={locale} />
+          ))}
+        </ul>
       </div>
     </section>
   );

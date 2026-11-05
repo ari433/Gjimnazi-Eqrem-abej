@@ -2,11 +2,14 @@
  * Content model for the school website.
  * Mirrors the Supabase schema in supabase/migrations. Every public-facing
  * record can carry `verification` so unconfirmed content is labelled in the UI.
+ * Fields ending in `_de` hold the German translation; the data layer swaps
+ * them in for /de pages (see lib/content/localize.ts).
  */
 
 export type PublishStatus = "draft" | "published" | "archived";
 export type Verification = "verified" | "pending";
 export type Role = "admin" | "editor" | "contributor" | "viewer";
+type T = string | null;
 
 /** Fields every public record shares. `is_example` marks local demo content. */
 export interface BaseRecord {
@@ -16,6 +19,8 @@ export interface BaseRecord {
   created_at?: string;
   updated_at?: string;
   is_example?: boolean;
+  /** Set by the data layer when German was requested but no translation exists. */
+  untranslated?: boolean;
 }
 
 export interface NewsArticle extends BaseRecord {
@@ -28,6 +33,16 @@ export interface NewsArticle extends BaseRecord {
   cover_alt: string | null;
   featured: boolean;
   author_name: string | null;
+  /** false when the exact publication date is unknown: no date is shown. */
+  show_date: boolean;
+  /** Extra photos shown under the article. */
+  gallery: string[];
+  source_url: string | null;
+  title_de?: T;
+  excerpt_de?: T;
+  body_de?: T;
+  category_de?: T;
+  cover_alt_de?: T;
 }
 
 export interface Announcement extends BaseRecord {
@@ -36,6 +51,9 @@ export interface Announcement extends BaseRecord {
   audience: string;
   priority: "normal" | "important" | "urgent";
   expires_at: string | null;
+  title_de?: T;
+  body_de?: T;
+  audience_de?: T;
 }
 
 export interface SchoolEvent extends BaseRecord {
@@ -49,6 +67,10 @@ export interface SchoolEvent extends BaseRecord {
   category: string;
   cover_url: string | null;
   verification: Verification;
+  title_de?: T;
+  description_de?: T;
+  location_de?: T;
+  category_de?: T;
 }
 
 export interface Program extends BaseRecord {
@@ -65,6 +87,15 @@ export interface Program extends BaseRecord {
   sort_order: number;
   verification: Verification;
   source_note: string | null;
+  name_de?: T;
+  short_name_de?: T;
+  tagline_de?: T;
+  summary_de?: T;
+  overview_de?: T;
+  grades_de?: T;
+  source_note_de?: T;
+  outcomes_de?: string[] | null;
+  pathways_de?: string[] | null;
 }
 
 export interface Subject {
@@ -76,6 +107,9 @@ export interface Subject {
   description: string | null;
   sort_order: number;
   verification: Verification;
+  name_de?: T;
+  description_de?: T;
+  untranslated?: boolean;
 }
 
 export interface StaffMember extends BaseRecord {
@@ -89,6 +123,11 @@ export interface StaffMember extends BaseRecord {
   sort_order: number;
   verification: Verification;
   source_note: string | null;
+  video_url: string | null;
+  role_title_de?: T;
+  department_de?: T;
+  bio_de?: T;
+  source_note_de?: T;
 }
 
 export interface Club extends BaseRecord {
@@ -101,6 +140,10 @@ export interface Club extends BaseRecord {
   is_media_club: boolean;
   sort_order: number;
   verification: Verification;
+  name_de?: T;
+  summary_de?: T;
+  description_de?: T;
+  meeting_info_de?: T;
 }
 
 export interface ClubMember {
@@ -110,6 +153,8 @@ export interface ClubMember {
   role: string;
   photo_url: string | null;
   sort_order: number;
+  role_de?: T;
+  untranslated?: boolean;
 }
 
 export interface StudentProject extends BaseRecord {
@@ -122,6 +167,9 @@ export interface StudentProject extends BaseRecord {
   cover_url: string | null;
   club_id: string | null;
   link_url: string | null;
+  title_de?: T;
+  summary_de?: T;
+  body_de?: T;
 }
 
 export interface Achievement extends BaseRecord {
@@ -130,6 +178,10 @@ export interface Achievement extends BaseRecord {
   year: string;
   category: string;
   verification: Verification;
+  link_url: string | null;
+  title_de?: T;
+  description_de?: T;
+  category_de?: T;
 }
 
 export type MediaKind = "image" | "video" | "podcast";
@@ -145,6 +197,9 @@ export interface MediaItem extends BaseRecord {
   width: number | null;
   height: number | null;
   taken_at: string | null;
+  title_de?: T;
+  caption_de?: T;
+  album_de?: T;
 }
 
 export interface SchoolDocument extends BaseRecord {
@@ -154,6 +209,9 @@ export interface SchoolDocument extends BaseRecord {
   file_url: string;
   file_size: number | null;
   file_type: string | null;
+  title_de?: T;
+  description_de?: T;
+  category_de?: T;
 }
 
 export interface Stat {
@@ -165,6 +223,9 @@ export interface Stat {
   year: string;
   sort_order: number;
   verification: Verification;
+  label_de?: T;
+  source_de?: T;
+  untranslated?: boolean;
 }
 
 export interface TimelineEntry {

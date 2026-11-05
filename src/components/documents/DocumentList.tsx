@@ -5,9 +5,11 @@ import { Download, FileText, Search } from "lucide-react";
 import type { SchoolDocument } from "@/lib/types";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { formatBytes, formatDate } from "@/lib/utils";
+import { t, type Locale } from "@/lib/i18n";
 
 /** Searchable, category-grouped document list. */
-export function DocumentList({ docs }: { docs: SchoolDocument[] }) {
+export function DocumentList({ docs, locale = "sq" }: { docs: SchoolDocument[]; locale?: Locale }) {
+  const L = t(locale).docs_;
   const [q, setQ] = useState("");
   const filtered = useMemo(() => {
     const n = q.trim().toLowerCase();
@@ -17,26 +19,24 @@ export function DocumentList({ docs }: { docs: SchoolDocument[] }) {
 
   if (docs.length === 0)
     return (
-      <EmptyState icon={FileText} title="Ende nuk ka dokumente të publikuara">
-        Rregulloret, formularët dhe planet e shkollës publikohen këtu nga administrata.
-      </EmptyState>
+      <EmptyState icon={FileText} title={L.empty} />
     );
 
   return (
     <div>
       <label className="relative block max-w-xl">
-        <span className="sr-only">Kërko dokumente</span>
+        <span className="sr-only">{L.searchLabel}</span>
         <Search aria-hidden className="pointer-events-none absolute left-5 top-1/2 size-5 -translate-y-1/2 text-muted" />
         <input
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Kërko sipas titullit ose kategorisë"
+          placeholder={L.search}
           className="min-h-14 w-full rounded-pill border border-line bg-white pl-13 pr-6 text-base outline-none transition-colors focus:border-ink"
         />
       </label>
       <p className="mt-3 text-sm text-muted" aria-live="polite">
-        {filtered.length === 1 ? "1 dokument" : `${filtered.length} dokumente`}
+        {L.count(filtered.length)}
       </p>
 
       {cats.map((c) => (
@@ -60,12 +60,12 @@ export function DocumentList({ docs }: { docs: SchoolDocument[] }) {
                       <span className="block text-lg font-semibold tracking-[-0.01em]">{d.title}</span>
                       {d.description && <span className="block text-muted">{d.description}</span>}
                       <span className="mt-1 block text-sm text-muted">
-                        {[formatDate(d.published_at), formatBytes(d.file_size)].filter(Boolean).join(", ")}
+                        {[formatDate(d.published_at, { locale }), formatBytes(d.file_size)].filter(Boolean).join(", ")}
                       </span>
                     </span>
                     <span className="grid size-11 place-items-center rounded-full border border-line transition-colors group-hover:border-ink group-hover:bg-ink group-hover:text-white">
                       <Download aria-hidden className="size-4" />
-                      <span className="sr-only">Shkarko</span>
+                      <span className="sr-only">{L.download}</span>
                     </span>
                   </a>
                 </li>

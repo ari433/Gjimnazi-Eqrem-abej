@@ -4,7 +4,7 @@ import { submitWithoutReset } from "@/lib/use-form-submit";
 import { useActionState, useState } from "react";
 import { ArrowDown, ArrowUp, CheckCircle2, CircleAlert, Loader2, Plus, Save, Trash2 } from "lucide-react";
 import { saveSiteSection, type ActionState } from "@/app/admin/actions";
-import type { SiteKey } from "@/lib/admin/site-schemas";
+import { baseKey, type BaseSiteKey, type SiteKey } from "@/lib/admin/site-schemas";
 import { FieldShell, ImageInput, inputCls } from "./fields";
 import { cn } from "@/lib/utils";
 
@@ -13,7 +13,7 @@ type Leaf = { path: string; label: string; kind: Kind; nullable?: boolean; help?
 type Repeater = { path: string; label: string; kind: "repeater"; item: { name: string; label: string; kind: Kind; wide?: boolean }[]; blank: Record<string, unknown> };
 type Desc = Leaf | Repeater;
 
-const D: Record<SiteKey, Desc[]> = {
+const D: Record<BaseSiteKey, Desc[]> = {
   hero: [
     { path: "title", label: "Titulli i madh", kind: "text", wide: true, help: "Mbajeni të shkurtër: 2 deri në 5 fjalë." },
     { path: "lede", label: "Teksti hyrës", kind: "textarea", wide: true },
@@ -131,7 +131,7 @@ export function SiteSectionEditor({ sectionKey, initialValue }: { sectionKey: Si
   // Empty optional strings are stored as null.
   const normalized = (() => {
     let v = value;
-    for (const d of D[sectionKey]) if (d.kind !== "repeater" && d.nullable && get(v, d.path) === "") v = set(v, d.path, null);
+    for (const d of D[baseKey(sectionKey)]) if (d.kind !== "repeater" && d.nullable && get(v, d.path) === "") v = set(v, d.path, null);
     return v;
   })();
 
@@ -139,7 +139,7 @@ export function SiteSectionEditor({ sectionKey, initialValue }: { sectionKey: Si
     <form onSubmit={submitWithoutReset(action)} className="rounded-2xl bg-white p-6 md:p-8">
       <input type="hidden" name="payload" value={JSON.stringify(normalized)} />
       <div className="grid gap-5 md:grid-cols-2">
-        {D[sectionKey].map((d) => {
+        {D[baseKey(sectionKey)].map((d) => {
           const id = `site-${sectionKey}-${(d.path || "root").replace(/\./g, "-")}`;
           if (d.kind === "image")
             return (

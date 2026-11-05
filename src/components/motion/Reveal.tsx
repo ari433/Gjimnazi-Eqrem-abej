@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotionSafe } from "@/hooks/useReducedMotionSafe";
+import { motion } from "motion/react";
 import type { ReactNode } from "react";
 
 type Props = {
@@ -12,7 +13,7 @@ type Props = {
 
 /** One restrained entrance: a short rise with an expo ease, once. */
 export function Reveal({ children, className, delay = 0, as = "div" }: Props) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const Tag = motion[as];
   return (
     <Tag
@@ -30,7 +31,7 @@ export function Reveal({ children, className, delay = 0, as = "div" }: Props) {
 
 /** Staggers direct children that are <RevealItem>. */
 export function RevealGroup({ children, className, stagger = 0.08 }: { children: ReactNode; className?: string; stagger?: number }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   return (
     <motion.div
       className={className}

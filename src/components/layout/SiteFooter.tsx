@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { SocialIcon } from "@/components/ui/SocialIcon";
-import { NAV } from "@/lib/navigation";
+import { lp, navFor, t, type Locale } from "@/lib/i18n";
 import { getSiteContent } from "@/lib/content/queries";
 import { PendingBadge } from "@/components/ui/Pending";
 
-export async function SiteFooter() {
-  const site = await getSiteContent();
+export async function SiteFooter({ locale }: { locale: Locale }) {
+  const site = await getSiteContent(locale);
+  const T = t(locale);
+  const NAV = navFor(locale);
   const socials = site.socials.filter((s) => s.verified);
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.contact.map_query)}`;
 
@@ -16,7 +18,7 @@ export async function SiteFooter() {
         <div className="grid gap-14 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <p className="text-2xl font-semibold leading-tight tracking-[-0.02em]">
-              Gjimnazi i shkencave shoqërore-gjuhësore në Prishtinë.
+              {T.footerTagline}
             </p>
             <address className="mt-6 not-italic text-white/70">
               <a
@@ -44,12 +46,12 @@ export async function SiteFooter() {
                   </a>
                 ) : null}
                 {!site.contact.phone && !site.contact.email && (
-                  <PendingBadge label="Telefoni dhe emaili në pritje" className="bg-white/10 text-white/80" />
+                  <PendingBadge label={T.pendingContacts} className="bg-white/10 text-white/80" />
                 )}
               </div>
             </address>
             {socials.length > 0 && (
-              <ul className="mt-8 flex gap-2" aria-label="Rrjetet sociale">
+              <ul className="mt-8 flex gap-2" aria-label={T.socials}>
                 {socials.map((s) => (
                   <li key={s.href}>
                     <a
@@ -67,7 +69,7 @@ export async function SiteFooter() {
             )}
           </div>
 
-          <nav aria-label="Navigimi në fund të faqes" className="grid grid-cols-2 gap-10 sm:grid-cols-4 lg:col-span-8">
+          <nav aria-label={T.footerNav} className="grid grid-cols-2 gap-10 sm:grid-cols-4 lg:col-span-8">
             {NAV.map((group) => (
               <div key={group.label}>
                 <p className="text-sm text-white/50">{group.label}</p>
@@ -93,14 +95,17 @@ export async function SiteFooter() {
         </p>
 
         <div className="flex flex-col gap-3 border-t border-white/10 py-7 text-sm text-white/55 md:flex-row md:items-center md:justify-between">
-          <p>© Gjimnazi &ldquo;Eqrem Çabej&rdquo;, Prishtinë</p>
+          <p>© Gjimnazi &ldquo;Eqrem Çabej&rdquo;, {T.city}</p>
           <div className="flex gap-5">
-            <Link href="/dokumentet" className="link-underline hover:text-white">
-              Dokumentet
+            <Link href={lp(locale, "/dokumentet")} className="link-underline hover:text-white">
+              {T.pages.documents[0]}
             </Link>
-            <Link href="/admin" className="link-underline hover:text-white">
-              Hyrja për stafin
-            </Link>
+            {/* The static preview has no server, so the staff panel is not available there. */}
+            {process.env.NEXT_PUBLIC_STATIC_PREVIEW !== "1" && (
+              <Link href="/admin" className="link-underline hover:text-white">
+                {T.staffLogin}
+              </Link>
+            )}
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { extendTailwindMerge } from "tailwind-merge";
+import { dates, type Locale } from "./i18n";
 
 // Teach tailwind-merge our custom type scale so `text-display` is not
 // mistaken for a colour and dropped next to `text-ink`.
@@ -13,12 +14,8 @@ export function cn(...inputs: ClassValue[]) {
 
 const TZ = "Europe/Belgrade";
 
-// Albanian names are hard-coded: ICU data for sq differs between Node and
-// browsers, which would cause hydration mismatches.
-const MONTHS = ["janar", "shkurt", "mars", "prill", "maj", "qershor", "korrik", "gusht", "shtator", "tetor", "nëntor", "dhjetor"];
-const MONTHS_SHORT = ["jan", "shk", "mar", "pri", "maj", "qer", "kor", "gus", "sht", "tet", "nën", "dhj"];
-const WEEKDAYS = ["e diel", "e hënë", "e martë", "e mërkurë", "e enjte", "e premte", "e shtunë"];
-
+// Month and weekday names are hard-coded (lib/i18n): ICU data differs
+// between Node and browsers, which would cause hydration mismatches.
 /** Calendar parts of an instant in the school's time zone (numeric, locale-free). */
 export function zonedParts(iso: string | Date) {
   const d = typeof iso === "string" ? new Date(iso) : iso;
@@ -44,11 +41,15 @@ export function zonedParts(iso: string | Date) {
   };
 }
 
-export function formatDate(iso: string | null | undefined, opts: { month?: "short" | "long" } = {}) {
+export function formatDate(
+  iso: string | null | undefined,
+  opts: { month?: "short" | "long"; locale?: Locale } = {},
+) {
   if (!iso) return "";
+  const locale = opts.locale ?? "sq";
   const p = zonedParts(iso);
-  const month = opts.month === "short" ? MONTHS_SHORT[p.month] : MONTHS[p.month];
-  return `${p.day} ${month} ${p.year}`;
+  const month = (opts.month === "short" ? dates.MONTHS_SHORT : dates.MONTHS)[locale][p.month];
+  return locale === "de" ? `${p.day}. ${month} ${p.year}` : `${p.day} ${month} ${p.year}`;
 }
 
 export function formatTime(iso: string | null | undefined) {
@@ -57,16 +58,16 @@ export function formatTime(iso: string | null | undefined) {
   return `${p.hour}:${p.minute}`;
 }
 
-export function monthLabel(year: number, monthIndex: number) {
-  return `${MONTHS[monthIndex]} ${year}`;
+export function monthLabel(year: number, monthIndex: number, locale: Locale = "sq") {
+  return `${dates.MONTHS[locale][monthIndex]} ${year}`;
 }
 
-export function dateParts(iso: string) {
+export function dateParts(iso: string, locale: Locale = "sq") {
   const p = zonedParts(iso);
   return {
     day: String(p.day).padStart(2, "0"),
-    month: MONTHS_SHORT[p.month],
-    weekday: WEEKDAYS[p.weekday],
+    month: dates.MONTHS_SHORT[locale][p.month],
+    weekday: dates.WEEKDAYS[locale][p.weekday],
     year: String(p.year),
   };
 }

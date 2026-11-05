@@ -1,24 +1,11 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/ui/PageHero";
-import { GalleryGrid } from "@/components/media/GalleryGrid";
-import { getMedia } from "@/lib/content/queries";
+import { pageMeta } from "@/lib/meta";
+import { t } from "@/lib/i18n";
+import { GalleryView } from "@/views/GalleryView";
 
-export const metadata: Metadata = {
-  title: "Galeria e fotove dhe videove",
-  description: "Foto dhe video nga jeta në Gjimnazin \"Eqrem Çabej\".",
-  alternates: { canonical: "/galeria" },
-};
+const T = t("sq");
+export const metadata: Metadata = pageMeta("sq", "/galeria", T.pages.gallery[0], `${T.pages.gallery[1]}. Gjimnazi "Eqrem Çabej", ${T.city}.`);
 
-export default async function GalleryPage() {
-  const media = await getMedia();
-  return (
-    <>
-      <PageHero title="Galeria" crumbs={[{ label: "Galeria" }]} lede="Foto dhe video nga aktivitetet, klasat dhe klubet." />
-      <section className="bg-paper pb-24 md:pb-32">
-        <div className="shell">
-          <GalleryGrid items={media} />
-        </div>
-      </section>
-    </>
-  );
+export default function Page() {
+  return <GalleryView locale="sq" />;
 }

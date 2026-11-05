@@ -155,7 +155,25 @@ export function ResourceForm({
 
   return (
     <form onSubmit={submitWithoutReset(action)} noValidate className="grid gap-8 xl:grid-cols-[1fr_20rem]">
-      <div className="grid content-start gap-6 rounded-2xl bg-white p-6 md:grid-cols-2 md:p-8">{resource.fields.map(renderField)}</div>
+      <div className="grid content-start gap-6">
+        <div className="grid content-start gap-6 rounded-2xl bg-white p-6 md:grid-cols-2 md:p-8">
+          {resource.fields.filter((f) => f.lang !== "de").map(renderField)}
+        </div>
+        {resource.fields.some((f) => f.lang === "de") && (
+          <details className="group rounded-2xl bg-white p-6 md:p-8" open={resource.fields.some((f) => f.lang === "de" && str(row?.[f.name]))}>
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
+              <span>
+                Përkthimi në gjermanisht
+                <span className="mt-1 block text-sm font-normal text-muted">
+                  Shfaqet në faqen /de. Fushat bosh shfaqen në shqip, me shënimin “nur auf Albanisch”.
+                </span>
+              </span>
+              <span aria-hidden className="text-xl transition-transform group-open:rotate-45">+</span>
+            </summary>
+            <div className="mt-6 grid gap-6 md:grid-cols-2">{resource.fields.filter((f) => f.lang === "de").map(renderField)}</div>
+          </details>
+        )}
+      </div>
 
       <aside className="space-y-4 xl:sticky xl:top-6 xl:self-start">
         {resource.publishable && (
