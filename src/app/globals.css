@@ -1,0 +1,192 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Gjimnazi "Eqrem Çabej" — design tokens
+   Paper + navy ink + one electric blue. Type does the heavy lifting.
+------------------------------------------------------------------- */
+@theme {
+  --color-paper: #f4f6fa;
+  --color-white: #ffffff;
+  --color-ink: #0a1838;
+  --color-ink-2: #142a57;
+  --color-ink-3: #24396b;
+  --color-blue: #2b4bff;
+  --color-blue-deep: #1a33d6;
+  --color-blue-soft: #e5eaff;
+  --color-line: #d8deea;
+  --color-line-strong: #b9c3d6;
+  --color-muted: #566079;
+  --color-pending: #9a5b00;
+  --color-pending-bg: #fff4dc;
+  --color-danger: #c42b2b;
+  --color-success: #127a4a;
+
+  --font-sans: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-news), ui-serif, Georgia, serif;
+
+  --text-display: clamp(3.25rem, 10.5vw, 11.5rem);
+  --text-display--line-height: 0.86;
+  --text-display--letter-spacing: -0.045em;
+  --text-mega: clamp(2.6rem, 6.4vw, 6.5rem);
+  --text-mega--line-height: 0.92;
+  --text-mega--letter-spacing: -0.035em;
+  --text-title: clamp(2rem, 3.8vw, 3.75rem);
+  --text-title--line-height: 1;
+  --text-title--letter-spacing: -0.03em;
+  --text-lede: clamp(1.15rem, 1.6vw, 1.45rem);
+  --text-lede--line-height: 1.45;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --radius-card: 1.25rem;
+  --radius-pill: 999px;
+
+  --container-page: 88rem;
+  --container-prose: 42rem;
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-shimmer: shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: 6rem;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  ::selection {
+    background: var(--color-blue);
+    color: var(--color-white);
+  }
+  :focus-visible {
+    outline: 2.5px solid var(--color-blue);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+    font-weight: 700;
+  }
+  p { text-wrap: pretty; }
+  img, video { max-width: 100%; }
+
+  /* Lenis */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+  .lenis.lenis-stopped { overflow: hidden; }
+}
+
+@layer components {
+  .page-x {
+    padding-inline: clamp(1rem, 4vw, 3rem);
+  }
+  .shell {
+    width: 100%;
+    max-width: var(--container-page);
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 4vw, 3rem);
+  }
+
+  /* Editorial long-form text for news articles and program pages */
+  .prose-school {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: var(--color-ink);
+    max-width: var(--container-prose);
+  }
+  .prose-school > * + * { margin-top: 1.15em; }
+  .prose-school h2 {
+    font-family: var(--font-sans);
+    font-size: 1.75rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-top: 2em;
+  }
+  .prose-school h3 {
+    font-family: var(--font-sans);
+    font-size: 1.3rem;
+    margin-top: 1.6em;
+  }
+  .prose-school a {
+    color: var(--color-blue-deep);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+  .prose-school ul { list-style: disc; padding-left: 1.25em; }
+  .prose-school ol { list-style: decimal; padding-left: 1.25em; }
+  .prose-school blockquote {
+    border-left: 3px solid var(--color-blue);
+    padding-left: 1.1em;
+    font-style: italic;
+    color: var(--color-ink-2);
+  }
+
+  /* A subtle film-grain overlay used on dark sections */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.07;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, #e6eaf2 0%, #f3f5f9 50%, #e6eaf2 100%);
+    background-size: 200% 100%;
+    animation: var(--animate-shimmer);
+    border-radius: 0.75rem;
+  }
+
+  /* Diagonal hatch used for "pending verification" frames */
+  .hatch {
+    background-image: repeating-linear-gradient(
+      135deg,
+      rgba(154, 91, 0, 0.09) 0 1px,
+      transparent 1px 9px
+    );
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1.5px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size 0.45s var(--ease-out-expo);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
