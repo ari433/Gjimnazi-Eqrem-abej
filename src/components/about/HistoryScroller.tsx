@@ -49,7 +49,7 @@ export function HistoryScroller({ entries }: { entries: TimelineEntry[] }) {
             <li
               key={i}
               className="flex min-h-[38vh] flex-col justify-center border-t border-line py-12 transition-opacity duration-500 lg:min-h-[56vh]"
-              style={{ opacity: reduce ? 1 : i === active ? 1 : 0.35 }}
+              style={{ opacity: reduce === false && i !== active ? 0.35 : 1 }}
             >
               <p className="text-lg font-semibold text-blue-deep">{e.period}</p>
               <h2 className="mt-2 text-title font-bold">{e.title}</h2>

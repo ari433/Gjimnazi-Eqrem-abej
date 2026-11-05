@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { SchoolEvent } from "@/lib/types";
 import { cn, monthLabel as fmtMonth } from "@/lib/utils";
@@ -13,20 +13,11 @@ function ymd(d: Date) {
 }
 
 /** Month grid with event markers. Days with events link to the list below. */
-export function MonthCalendar({ events, initial }: { events: SchoolEvent[]; initial: string }) {
+export function MonthCalendar({ events, today }: { events: SchoolEvent[]; today: string }) {
   const [cursor, setCursor] = useState(() => {
-    const [y, m] = initial.split("-").map(Number);
+    const [y, m] = today.split("-").map(Number);
     return { y, m: m - 1 };
   });
-  const [today, setToday] = useState<string | null>(null);
-
-  // Jump to the current month once mounted (the server render uses `initial`).
-  useEffect(() => {
-    const now = new Date();
-    setToday(ymd(now));
-    const [y, m] = ymd(now).split("-").map(Number);
-    setCursor({ y, m: m - 1 });
-  }, []);
 
   const byDay = useMemo(() => {
     const map = new Map<string, SchoolEvent[]>();

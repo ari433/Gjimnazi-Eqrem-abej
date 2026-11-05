@@ -13,8 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CalendarPage() {
-  const [all, { upcoming, past }] = await Promise.all([getEvents(), getEventsSplit()]);
-  const initial = (upcoming[0] ?? all[0])?.starts_at.slice(0, 7) ?? "2026-09";
+  const [all, { upcoming, past, today }] = await Promise.all([getEvents(), getEventsSplit()]);
 
   const jsonLd = upcoming
     .filter((e) => e.verification === "verified" && !e.is_example)
@@ -37,7 +36,7 @@ export default async function CalendarPage() {
         <div className="shell grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <div className="lg:sticky lg:top-28">
-              <MonthCalendar events={all} initial={initial} />
+              <MonthCalendar events={all} today={today} />
             </div>
           </div>
           <div className="lg:col-span-7">

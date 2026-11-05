@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { HeaderFallback } from "@/components/layout/HeaderFallback";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { getSiteContent } from "@/lib/content/queries";
@@ -29,7 +31,9 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       <SmoothScroll />
-      <SiteHeader />
+      <Suspense fallback={<HeaderFallback />}>
+        <SiteHeader />
+      </Suspense>
       <main id="permbajtja" tabIndex={-1} className="outline-none">
         {children}
       </main>

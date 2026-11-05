@@ -177,7 +177,7 @@ export async function getEvents(): Promise<SchoolEvent[]> {
  * Events split around the start of today. Computed inside a cached scope so
  * the clock read happens once per cache window, not during prerender.
  */
-export async function getEventsSplit(): Promise<{ upcoming: SchoolEvent[]; past: SchoolEvent[] }> {
+export async function getEventsSplit(): Promise<{ upcoming: SchoolEvent[]; past: SchoolEvent[]; today: string }> {
   "use cache";
   cacheTag(TAGS.events);
   cacheLife("minutes");
@@ -186,7 +186,9 @@ export async function getEventsSplit(): Promise<{ upcoming: SchoolEvent[]; past:
   startOfToday.setHours(0, 0, 0, 0);
   const t = startOfToday.getTime();
   const end = (e: SchoolEvent) => new Date(e.ends_at ?? e.starts_at).getTime();
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Belgrade", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
   return {
+    today,
     upcoming: all.filter((e) => end(e) >= t),
     past: all.filter((e) => end(e) < t).reverse(),
   };

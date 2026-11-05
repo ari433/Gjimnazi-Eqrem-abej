@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+
+import { startTransition, useActionState, useEffect, useRef } from "react";
 import { CheckCircle2, Loader2, Send } from "lucide-react";
 import { sendContactMessage } from "@/app/(site)/kontakti/actions";
 import type { ContactState } from "@/lib/validation";
@@ -50,13 +51,11 @@ function Field({
 
 export function ContactForm() {
   const [state, action, pending] = useActionState(sendContactMessage, initial);
-  const [startedAt, setStartedAt] = useState(0);
-  const formRef = useRef<HTMLFormElement>(null);
-
-  useEffect(() => setStartedAt(Date.now()), []);
+  // When the form became interactive; bots that submit instantly are ignored.
+  const mountedAt = useRef(0);
   useEffect(() => {
-    if (state.status === "success") formRef.current?.reset();
-  }, [state]);
+    mountedAt.current = Date.now();
+  }, []);
 
   if (state.status === "success")
     return (
@@ -69,7 +68,14 @@ export function ContactForm() {
 
   const v = state.values ?? {};
   return (
-    <form ref={formRef} action={action} noValidate className="grid gap-5 rounded-card bg-white p-6 md:p-10">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        const fd = new FormData(e.currentTarget);
+        fd.set("started_at", String(mountedAt.current));
+        startTransition(() => action(fd));
+      }}
+      noValidate className="grid gap-5 rounded-card bg-white p-6 md:p-10">
       <div className="grid gap-5 md:grid-cols-2">
         <Field id="name" label="Emri dhe mbiemri" autoComplete="name" error={state.fieldErrors?.name} defaultValue={v.name} />
         <Field id="email" label="Emaili" type="email" autoComplete="email" error={state.fieldErrors?.email} defaultValue={v.email} />
@@ -82,7 +88,6 @@ export function ContactForm() {
         <label htmlFor="website">Mos e plotësoni</label>
         <input id="website" name="website" tabIndex={-1} autoComplete="off" />
       </div>
-      <input type="hidden" name="started_at" value={startedAt} />
 
       {state.status === "error" && state.message && (
         <p role="alert" className="rounded-2xl bg-danger/10 px-5 py-3 text-sm font-semibold text-danger">

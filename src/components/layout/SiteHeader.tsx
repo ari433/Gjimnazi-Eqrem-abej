@@ -37,11 +37,13 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [menuOpen]);
 
-  // Close everything on route change.
-  useEffect(() => {
+  // Close everything on route change (state adjusted during render, no effect).
+  const [lastPath, setLastPath] = useState(pathname);
+  if (lastPath !== pathname) {
+    setLastPath(pathname);
     setMenuOpen(false);
     setOpenGroup(null);
-  }, [pathname]);
+  }
 
   const closeMenu = useCallback(() => {
     setMenuOpen(false);

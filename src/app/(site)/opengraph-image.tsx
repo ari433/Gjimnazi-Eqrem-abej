@@ -27,7 +27,6 @@ export default async function OpengraphImage() {
           Ç
         </div>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", padding: 72, width: "100%" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={src} width={96} height={96} style={{ borderRadius: 999 }} alt="" />
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ fontSize: 76, fontWeight: 800, color: "#0a1838", letterSpacing: -3, lineHeight: 1 }}>Gjimnazi &ldquo;Eqrem Çabej&rdquo;</div>
