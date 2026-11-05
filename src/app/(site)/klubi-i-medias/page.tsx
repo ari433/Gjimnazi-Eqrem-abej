@@ -11,7 +11,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { VideoEmbed } from "@/components/media/VideoEmbed";
 import { EventRow } from "@/components/events/EventRow";
 import { getEventsSplit, getMediaClub } from "@/lib/content/queries";
-import { formatDate } from "@/lib/utils";
+import { asset, formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Klubi i Medias",
@@ -166,7 +166,7 @@ export default async function MediaClubPage() {
               {photos.slice(0, 6).map((m) => (
                 <RevealItem key={m.id}>
                   <div className="relative aspect-[4/3] overflow-hidden rounded-card bg-white/5">
-                    <Image src={m.url} alt={m.caption ?? m.title} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover" />
+                    <Image src={asset(m.url)} alt={m.caption ?? m.title} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover" />
                   </div>
                 </RevealItem>
               ))}

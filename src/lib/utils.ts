@@ -103,3 +103,11 @@ export function youtubeId(url: string): string | null {
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
 export const SCHOOL_NAME = "Gjimnazi \"Eqrem Çabej\"";
+
+/** Base path when the site is served from a sub-folder (static preview). */
+export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+/** Prefix a root-relative public file with the base path; leave URLs alone. */
+export function asset(src: string) {
+  return src.startsWith("/") && !src.startsWith("//") ? `${BASE_PATH}${src}` : src;
+}

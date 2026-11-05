@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { SITE_URL } from "@/lib/utils";
+import { SITE_URL, asset } from "@/lib/utils";
 import "./globals.css";
 
 const grotesk = localFont({
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   applicationName: "Gjimnazi \"Eqrem Çabej\"",
   keywords: ["Gjimnazi Eqrem Çabej", "gjimnaz Prishtinë", "shkencat shoqërore-gjuhësore", "shkollë e mesme", "Kosovë"],
   alternates: { canonical: "/" },
-  icons: { icon: "/logo.png", apple: "/logo.png" },
+  icons: { icon: asset("/logo.png"), apple: asset("/logo.png") },
   openGraph: {
     type: "website",
     locale: "sq_AL",

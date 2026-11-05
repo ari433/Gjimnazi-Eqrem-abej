@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ExternalLink, Inbox, LayoutDashboard, LogOut, Menu, PanelsTopLeft, Shield, X } from "lucide-react";
 import { signOut } from "@/app/admin/actions";
-import { cn } from "@/lib/utils";
+import { cn, asset } from "@/lib/utils";
 import { ROLE_LABEL } from "@/lib/admin/roles";
 import type { Profile } from "@/lib/types";
 
@@ -76,7 +76,7 @@ export function AdminSidebar({ profile, items, canSite, canMessages, canUsers }:
 
   const brand = (
     <Link href="/admin" className="flex items-center gap-2.5 px-5 py-5">
-      <Image src="/logo.png" alt="" width={32} height={32} className="rounded-full" />
+      <Image src={asset("/logo.png")} alt="" width={32} height={32} className="rounded-full" />
       <span className="text-sm font-bold leading-tight text-white">
         Paneli
         <span className="block font-normal text-white/50">Gjimnazi &ldquo;Eqrem Çabej&rdquo;</span>

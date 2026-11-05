@@ -7,7 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { ChevronDown, X } from "lucide-react";
 import { NAV } from "@/lib/navigation";
-import { cn } from "@/lib/utils";
+import { cn, asset } from "@/lib/utils";
 import { Magnetic } from "@/components/motion/Magnetic";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -92,7 +92,7 @@ export function SiteHeader() {
         >
           <div className="shell flex h-[4.5rem] items-center justify-between gap-6 md:h-20">
             <Link href="/" className="group flex items-center gap-3" aria-label="Gjimnazi Eqrem Çabej, ballina">
-              <Image src="/logo.png" alt="" width={44} height={44} className="size-10 rounded-full md:size-11" priority />
+              <Image src={asset("/logo.png")} alt="" width={44} height={44} className="size-10 rounded-full md:size-11" priority />
               <span className="leading-[1.05]">
                 <span className="block text-[0.98rem] font-bold tracking-[-0.02em]">Gjimnazi &ldquo;Eqrem Çabej&rdquo;</span>
                 <span className="block text-[0.8rem] text-muted">Prishtinë</span>
@@ -110,7 +110,9 @@ export function SiteHeader() {
                         type="button"
                         aria-expanded={open}
                         aria-controls={`${panelId}-${gi}`}
-                        onClick={() => setOpenGroup(open ? null : gi)}
+                        // Mouse users already opened it on hover, so a click keeps it open;
+                        // keyboard activation (detail === 0) toggles.
+                        onClick={(e) => setOpenGroup(e.detail === 0 && open ? null : gi)}
                         className={cn(
                           "flex items-center gap-1 rounded-pill px-4 py-2 text-[0.95rem] font-medium transition-colors",
                           open || active ? "bg-ink/[0.06] text-ink" : "text-ink/80 hover:text-ink",

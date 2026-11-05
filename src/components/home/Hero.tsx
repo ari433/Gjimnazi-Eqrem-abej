@@ -73,7 +73,7 @@ export function Hero({ hero }: { hero: SiteContent["hero"] }) {
         >
           <span
             ref={glyph}
-            className="block select-none bg-clip-text px-[0.04em] font-bold leading-[1.02] text-transparent will-change-transform [transform-origin:24%_42%] [-webkit-background-clip:text]"
+            className="block select-none bg-clip-text px-[0.04em] pb-[0.16em] font-bold leading-[1.02] text-transparent will-change-transform [transform-origin:24%_42%] [-webkit-background-clip:text]"
             style={{ ...fill, fontSize: "min(70svh, 86vw)" }}
           >
             Ç

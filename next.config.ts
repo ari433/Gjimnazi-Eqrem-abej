@@ -17,11 +17,16 @@ const securityHeaders = [
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
 ];
 
+// Static preview (GitHub Pages): served under /<repo>, no image optimizer.
+const previewBasePath = process.env.PREVIEW_BASE_PATH || undefined;
+
 const nextConfig: NextConfig = {
+  ...(previewBasePath ? { basePath: previewBasePath } : {}),
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
   images: {
+    unoptimized: Boolean(previewBasePath),
     formats: ["image/avif", "image/webp"],
     qualities: [60, 75, 90],
     remotePatterns: [

@@ -41,3 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 !.env.example
+
+# static preview output
+/preview-out
+.env.local.preview-bak

@@ -5,6 +5,7 @@ import type { MediaItem } from "@/lib/types";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
+import { asset } from "@/lib/utils";
 
 /** Bento of the latest photos. Low-resolution archive images stay small. */
 export function GalleryStrip({ media }: { media: MediaItem[] }) {
@@ -27,7 +28,7 @@ export function GalleryStrip({ media }: { media: MediaItem[] }) {
                 <RevealItem key={m.id} className={lowRes ? "col-span-1 row-span-1" : shapes[i] ?? "md:col-span-2"}>
                   <Link href="/galeria" className="group relative block h-full overflow-hidden rounded-card bg-line">
                     <Image
-                      src={m.url}
+                      src={asset(m.url)}
                       alt={m.caption ?? m.title}
                       fill
                       sizes={lowRes ? "206px" : "(min-width: 768px) 50vw, 50vw"}

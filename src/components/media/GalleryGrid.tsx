@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight, Images, Play, X } from "lucide-react";
 import type { MediaItem } from "@/lib/types";
 import { VideoEmbed } from "./VideoEmbed";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { cn, youtubeId } from "@/lib/utils";
+import { asset, cn, youtubeId } from "@/lib/utils";
 
 /** Filterable gallery with an accessible lightbox (Esc, arrows, focus return). */
 export function GalleryGrid({ items }: { items: MediaItem[] }) {
@@ -76,7 +76,7 @@ export function GalleryGrid({ items }: { items: MediaItem[] }) {
         <ul className="columns-2 gap-3 md:columns-3 lg:columns-4">
           {shown.map((m, i) => {
             const yt = m.kind === "video" ? youtubeId(m.url) : null;
-            const thumb = m.kind === "image" ? m.url : m.thumbnail_url ?? (yt ? `https://img.youtube.com/vi/${yt}/hqdefault.jpg` : null);
+            const thumb = m.kind === "image" ? asset(m.url) : m.thumbnail_url ?? (yt ? `https://img.youtube.com/vi/${yt}/hqdefault.jpg` : null);
             const lowRes = (m.width ?? 2000) < 600;
             const ratio = m.width && m.height ? `${m.width} / ${m.height}` : m.kind === "video" ? "16 / 9" : "4 / 3";
             return (
@@ -146,7 +146,7 @@ export function GalleryGrid({ items }: { items: MediaItem[] }) {
                 className="relative h-full max-h-[78vh] w-full max-w-6xl"
               >
                 {current.kind === "image" ? (
-                  <Image src={current.url} alt={current.caption ?? current.title} fill sizes="100vw" className="object-contain" />
+                  <Image src={asset(current.url)} alt={current.caption ?? current.title} fill sizes="100vw" className="object-contain" />
                 ) : (
                   <div className="flex h-full items-center">
                     <VideoEmbed url={current.url} title={current.title} poster={current.thumbnail_url} />

@@ -78,7 +78,14 @@ export default async function ContactPage() {
           </div>
           <div className="lg:col-span-7">
             <h2 className="mb-6 text-title font-bold">Dërgo një mesazh</h2>
-            <ContactForm />
+            {process.env.NEXT_PUBLIC_STATIC_PREVIEW === "1" ? (
+              <div className="rounded-card bg-white p-8 md:p-10">
+                <p className="text-xl font-semibold tracking-[-0.02em]">Formulari aktivizohet në versionin përfundimtar të faqes.</p>
+                <p className="mt-2 text-muted">Ky është version paraprak. Deri atëherë, na shkruani përmes Instagramit të shkollës.</p>
+              </div>
+            ) : (
+              <ContactForm />
+            )}
           </div>
         </div>
       </section>
