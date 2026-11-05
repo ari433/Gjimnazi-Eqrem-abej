@@ -1,0 +1,1 @@
+self.__SSG_MANIFEST=new Set(["\u002Fadmin\u002F[resource]","\u002Fadmin\u002F[resource]\u002F[id]","\u002Fadmin\u002F[resource]\u002Fnew","\u002Flajme\u002F[slug]","\u002Fprogramet\u002F[slug]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()

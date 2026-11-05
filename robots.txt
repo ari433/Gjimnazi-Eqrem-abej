@@ -1,0 +1,7 @@
+User-Agent: *
+Allow: /
+Disallow: /admin
+Disallow: /auth
+
+Host: https://ari433.github.io/Gjimnazi-Eqrem-abej
+Sitemap: https://ari433.github.io/Gjimnazi-Eqrem-abej/sitemap.xml
