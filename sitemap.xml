@@ -1,93 +1,357 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 <url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de" />
 <changefreq>daily</changefreq>
 <priority>1</priority>
 </url>
 <url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de" />
+<changefreq>daily</changefreq>
+<priority>0.9</priority>
+</url>
+<url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/rreth-shkolles</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/rreth-shkolles" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/rreth-shkolles" />
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/rreth-shkolles</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/rreth-shkolles" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/rreth-shkolles" />
+<changefreq>monthly</changefreq>
+<priority>0.63</priority>
 </url>
 <url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/historia-dhe-misioni</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/historia-dhe-misioni" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/historia-dhe-misioni" />
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/historia-dhe-misioni</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/historia-dhe-misioni" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/historia-dhe-misioni" />
+<changefreq>monthly</changefreq>
+<priority>0.63</priority>
 </url>
 <url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/udheheqja-dhe-stafi</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/udheheqja-dhe-stafi" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/udheheqja-dhe-stafi" />
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/udheheqja-dhe-stafi</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/udheheqja-dhe-stafi" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/udheheqja-dhe-stafi" />
+<changefreq>monthly</changefreq>
+<priority>0.63</priority>
 </url>
 <url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/arritjet</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/arritjet" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/arritjet" />
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/arritjet</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/arritjet" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/arritjet" />
+<changefreq>monthly</changefreq>
+<priority>0.63</priority>
 </url>
 <url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/programet</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/programet" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/programet" />
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/programet</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/programet" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/programet" />
+<changefreq>monthly</changefreq>
+<priority>0.63</priority>
 </url>
 <url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/per-nxenesit</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/per-nxenesit" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/per-nxenesit" />
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/per-nxenesit</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/per-nxenesit" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/per-nxenesit" />
+<changefreq>monthly</changefreq>
+<priority>0.63</priority>
 </url>
 <url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/dokumentet</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/dokumentet" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/dokumentet" />
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/dokumentet</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/dokumentet" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/dokumentet" />
+<changefreq>monthly</changefreq>
+<priority>0.63</priority>
 </url>
 <url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/klubet</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/klubet" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/klubet" />
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/klubet</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/klubet" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/klubet" />
+<changefreq>monthly</changefreq>
+<priority>0.63</priority>
 </url>
 <url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/klubi-i-medias</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/klubi-i-medias" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/klubi-i-medias" />
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/klubi-i-medias</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/klubi-i-medias" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/klubi-i-medias" />
+<changefreq>monthly</changefreq>
+<priority>0.63</priority>
 </url>
 <url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/projektet</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/projektet" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/projektet" />
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/projektet</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/projektet" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/projektet" />
+<changefreq>monthly</changefreq>
+<priority>0.63</priority>
 </url>
 <url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/galeria</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/galeria" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/galeria" />
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/galeria</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/galeria" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/galeria" />
+<changefreq>monthly</changefreq>
+<priority>0.63</priority>
 </url>
 <url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme" />
 <changefreq>daily</changefreq>
 <priority>0.7</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme" />
+<changefreq>daily</changefreq>
+<priority>0.63</priority>
 </url>
 <url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/njoftimet</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/njoftimet" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/njoftimet" />
 <changefreq>daily</changefreq>
 <priority>0.7</priority>
 </url>
 <url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/njoftimet</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/njoftimet" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/njoftimet" />
+<changefreq>daily</changefreq>
+<priority>0.63</priority>
+</url>
+<url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/kalendari</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/kalendari" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/kalendari" />
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/kalendari</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/kalendari" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/kalendari" />
+<changefreq>monthly</changefreq>
+<priority>0.63</priority>
 </url>
 <url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/kontakti</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/kontakti" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/kontakti" />
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 <url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/kontakti</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/kontakti" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/kontakti" />
+<changefreq>monthly</changefreq>
+<priority>0.63</priority>
+</url>
+<url>
 <loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/programet/shkencat-shoqerore-gjuhesore</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/programet/shkencat-shoqerore-gjuhesore" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/programet/shkencat-shoqerore-gjuhesore" />
 <lastmod>2025-09-01T08:00:00Z</lastmod>
+<changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>
 <url>
-<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/programet/gjuha-gjermane</loc>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/programet/shkencat-shoqerore-gjuhesore</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/programet/shkencat-shoqerore-gjuhesore" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/programet/shkencat-shoqerore-gjuhesore" />
 <lastmod>2025-09-01T08:00:00Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.54</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/programet/diploma-gjermane</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/programet/diploma-gjermane" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/programet/diploma-gjermane" />
+<lastmod>2025-09-01T08:00:00Z</lastmod>
+<changefreq>monthly</changefreq>
 <priority>0.6</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/programet/diploma-gjermane</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/programet/diploma-gjermane" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/programet/diploma-gjermane" />
+<lastmod>2025-09-01T08:00:00Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.54</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/keshilli-i-nxenesve-2026-2027</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/keshilli-i-nxenesve-2026-2027" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/keshilli-i-nxenesve-2026-2027" />
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/keshilli-i-nxenesve-2026-2027</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/keshilli-i-nxenesve-2026-2027" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/keshilli-i-nxenesve-2026-2027" />
+<changefreq>monthly</changefreq>
+<priority>0.45</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/vrapimi-kunder-kancerit-te-gjirit</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/vrapimi-kunder-kancerit-te-gjirit" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/vrapimi-kunder-kancerit-te-gjirit" />
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/vrapimi-kunder-kancerit-te-gjirit</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/vrapimi-kunder-kancerit-te-gjirit" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/vrapimi-kunder-kancerit-te-gjirit" />
+<changefreq>monthly</changefreq>
+<priority>0.45</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/vizita-ne-gjermani-educamp</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/vizita-ne-gjermani-educamp" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/vizita-ne-gjermani-educamp" />
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/vizita-ne-gjermani-educamp</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/vizita-ne-gjermani-educamp" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/vizita-ne-gjermani-educamp" />
+<changefreq>monthly</changefreq>
+<priority>0.45</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/trajnim-me-play-international</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/trajnim-me-play-international" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/trajnim-me-play-international" />
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/trajnim-me-play-international</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/trajnim-me-play-international" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/trajnim-me-play-international" />
+<changefreq>monthly</changefreq>
+<priority>0.45</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/regjistrimi-ne-etwinning</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/regjistrimi-ne-etwinning" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/regjistrimi-ne-etwinning" />
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/regjistrimi-ne-etwinning</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/regjistrimi-ne-etwinning" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/regjistrimi-ne-etwinning" />
+<changefreq>monthly</changefreq>
+<priority>0.45</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/seminari-i-zfa-ne-bon</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/seminari-i-zfa-ne-bon" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/seminari-i-zfa-ne-bon" />
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/seminari-i-zfa-ne-bon</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/seminari-i-zfa-ne-bon" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/seminari-i-zfa-ne-bon" />
+<changefreq>monthly</changefreq>
+<priority>0.45</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/programi-i-diplomes-gjermane-pasurohet</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/programi-i-diplomes-gjermane-pasurohet" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/programi-i-diplomes-gjermane-pasurohet" />
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+<url>
+<loc>https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/programi-i-diplomes-gjermane-pasurohet</loc>
+<xhtml:link rel="alternate" hreflang="sq" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/lajme/programi-i-diplomes-gjermane-pasurohet" />
+<xhtml:link rel="alternate" hreflang="de" href="https://ari433.github.io/Gjimnazi-Eqrem-abej/de/lajme/programi-i-diplomes-gjermane-pasurohet" />
+<changefreq>monthly</changefreq>
+<priority>0.45</priority>
 </url>
 </urlset>
