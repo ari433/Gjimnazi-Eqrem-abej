@@ -102,7 +102,8 @@ export async function StaffView({ locale }: { locale: Locale }) {
           ) : (
             departments.map((d) => (
               <div key={d} className="mt-10">
-                <h3 className="text-xl font-semibold text-muted">{d}</h3>
+                {/* Teachers without a department sit in one plain grid; the card shows their subject. */}
+                {d !== "–" && <h3 className="text-xl font-semibold text-muted">{d}</h3>}
                 <RevealGroup className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   {teachers
                     .filter((x) => (x.department ?? "–") === d)

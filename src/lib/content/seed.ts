@@ -272,6 +272,23 @@ export const staff: StaffMember[] = [
     status: P,
     published_at: "2025-09-01T08:00:00Z",
   },
+  {
+    id: "staff-kushtrim-bekteshi",
+    full_name: "Kushtrim Bekteshi",
+    role_title: "Sociologji",
+    role_title_de: "Soziologie",
+    department: null,
+    bio: null,
+    photo_url: M("staf-kushtrim-bekteshi"),
+    email: null,
+    is_leadership: false,
+    sort_order: 10,
+    verification: "verified",
+    source_note: null,
+    video_url: null,
+    status: P,
+    published_at: "2026-11-11T08:00:00Z",
+  },
 ];
 
 /* ==================================================================== clubs */
