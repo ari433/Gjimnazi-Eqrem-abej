@@ -23,7 +23,7 @@ export function ProgramsExplorer({ programs, locale = "sq" }: { programs: Item[]
 
   return (
     <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
-      <ul className="lg:col-span-6" role="list">
+      <ul className="min-w-0 lg:col-span-6" role="list">
         {programs.map((p, i) => (
           <li key={p.id} className="border-t border-line last:border-b">
             <Link
@@ -40,7 +40,7 @@ export function ProgramsExplorer({ programs, locale = "sq" }: { programs: Item[]
               <span className="min-w-0 flex-1">
                 <span
                   className={cn(
-                    "block text-[clamp(1.7rem,4vw,3.2rem)] font-bold leading-[1] tracking-[-0.035em] transition-colors duration-300",
+                    "block hyphens-auto break-words text-[clamp(1.7rem,4vw,3.2rem)] font-bold leading-[1] tracking-[-0.035em] transition-colors duration-300",
                     i === active ? "text-ink" : "text-ink lg:text-ink/35 lg:group-hover:text-ink",
                   )}
                 >

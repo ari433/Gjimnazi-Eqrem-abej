@@ -162,9 +162,9 @@ export const programs: Program[] = [
     summary: "Profili i shkollës që nga 2021–2022: gjuhët dhe shkencat shoqërore në qendër.",
     summary_de: "Das Profil der Schule seit 2021–2022: Sprachen und Sozialwissenschaften im Mittelpunkt.",
     overview:
-      "Me vendim të MASHTI-t (nr. 2-854), shkolla funksionon si gjimnaz i shkencave shoqërore-gjuhësore, mbi traditën e saj filologjike që nga viti 1990. Mësohen shqipja, gjuhët e huaja dhe latinishtja, krahas shkencave shoqërore, historisë, psikologjisë, matematikës, shkencave natyrore, arteve, edukatës fizike dhe TIK-ut.",
+      "Me vendim të MASHTI-t (nr. 2-854), shkolla funksionon si gjimnaz i shkencave shoqërore-gjuhësore, mbi traditën e saj filologjike që nga viti 1990. Mësohen shqipja dhe gjuhët e huaja, krahas shkencave shoqërore, historisë, psikologjisë, matematikës, shkencave natyrore, arteve, edukatës fizike dhe TIK-ut.",
     overview_de:
-      "Per Beschluss des Bildungsministeriums (Nr. 2-854) ist die Schule ein Gymnasium für Sozial- und Sprachwissenschaften und baut auf ihrer philologischen Tradition seit 1990 auf. Unterrichtet werden Albanisch, Fremdsprachen und Latein sowie Sozialwissenschaften, Geschichte, Psychologie, Mathematik, Naturwissenschaften, Kunst, Sport und Informatik.",
+      "Per Beschluss des Bildungsministeriums (Nr. 2-854) ist die Schule ein Gymnasium für Sozial- und Sprachwissenschaften und baut auf ihrer philologischen Tradition seit 1990 auf. Unterrichtet werden Albanisch und Fremdsprachen sowie Sozialwissenschaften, Geschichte, Psychologie, Mathematik, Naturwissenschaften, Kunst, Sport und Informatik.",
     outcomes: [],
     pathways: [],
     grades: "Klasat X–XII",
@@ -226,7 +226,6 @@ const SUBJECTS: [string, string][] = [
   ["Gjuhë shqipe", "Albanisch"],
   ["Gjuhë angleze", "Englisch"],
   ["Gjuhë gjermane", "Deutsch"],
-  ["Gjuhë latine", "Latein"],
   ["Matematikë", "Mathematik"],
   ["Histori", "Geschichte"],
   ["Psikologji", "Psychologie"],

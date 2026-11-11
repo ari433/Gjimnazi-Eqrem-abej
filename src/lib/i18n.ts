@@ -117,13 +117,6 @@ const sq = {
     historyLink: "Historia dhe misioni",
     studentInfo: "Informata për nxënësit",
   },
-  tree: {
-    kicker: "Pema e gjuhëve",
-    title: "Shqipja është degë më vete.",
-    body: "Në familjen e madhe indoevropiane, shqipja nuk ka motër të afërt. Kjo murale në korridorin tonë e tregon atë që Eqrem Çabej studioi gjithë jetën.",
-    caption: "Muralja e pemës së gjuhëve në gjimnaz.",
-    label: "Shqipja",
-  },
   news_: {
     empty: "Ende nuk ka lajme të publikuara",
     emptyBody: "Lajmet do të shfaqen këtu sapo stafi t'i publikojë.",
@@ -358,13 +351,6 @@ const de: Dict = {
     mission: "Mission",
     historyLink: "Geschichte und Leitbild",
     studentInfo: "Infos für Schüler",
-  },
-  tree: {
-    kicker: "Der Sprachenbaum",
-    title: "Albanisch ist ein eigener Zweig.",
-    body: "In der großen indoeuropäischen Sprachfamilie hat das Albanische keine nahe Schwester. Das Wandbild in unserem Flur zeigt, was Eqrem Çabej sein Leben lang erforschte.",
-    caption: "Das Wandbild des Sprachenbaums im Gymnasium.",
-    label: "Albanisch",
   },
   news_: {
     empty: "Noch keine Neuigkeiten veröffentlicht",

@@ -71,6 +71,8 @@ export function SiteHeader({ locale }: { locale: Locale }) {
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
   const solid = scrolled || openGroup !== null || !overHero;
+  // Over the home hero photo the bar is transparent, so its text turns white.
+  const light = !solid;
 
   return (
     <>
@@ -94,12 +96,20 @@ export function SiteHeader({ locale }: { locale: Locale }) {
             solid ? "bg-white/80 shadow-[0_1px_0_var(--color-line)] backdrop-blur-xl backdrop-saturate-150" : "bg-transparent",
           )}
         >
-          <div className="shell flex h-[4.5rem] items-center justify-between gap-6 md:h-20">
-            <Link href={lp(locale, "/")} className="group flex min-w-0 items-center gap-3" aria-label={`Gjimnazi Eqrem Çabej, ${T.home}`}>
-              <Image src={asset("/logo.png")} alt="" width={44} height={44} className="size-10 rounded-full md:size-11" priority />
-              <span className="leading-[1.05]">
-                <span className="block text-[0.98rem] font-bold tracking-[-0.02em]">Gjimnazi &ldquo;Eqrem Çabej&rdquo;</span>
-                <span className="block text-[0.8rem] text-muted">{T.city}</span>
+          <div className="shell flex h-[4.5rem] items-center justify-between gap-3 md:h-20 md:gap-6">
+            <Link
+              href={lp(locale, "/")}
+              className={cn("group flex min-w-0 items-center gap-3 transition-colors duration-500", light && "text-white")}
+              aria-label={`Gjimnazi Eqrem Çabej, ${T.home}`}
+            >
+              <Image src={asset("/logo.png")} alt="" width={44} height={44} className="size-10 shrink-0 rounded-full md:size-11" preload />
+              <span className="leading-[1.08]">
+                {/* Two tidy lines on a phone, one line with the city from sm up. */}
+                <span className="block whitespace-nowrap text-[0.98rem] font-bold tracking-[-0.02em]">
+                  Gjimnazi <br className="sm:hidden" />
+                  &ldquo;Eqrem Çabej&rdquo;
+                </span>
+                <span className={cn("hidden text-[0.8rem] transition-colors duration-500 sm:block", light ? "text-white/75" : "text-muted")}>{T.city}</span>
               </span>
             </Link>
 
@@ -119,7 +129,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
                         onClick={(e) => setOpenGroup(e.detail === 0 && open ? null : gi)}
                         className={cn(
                           "flex items-center gap-1 rounded-pill px-4 py-2 text-[0.95rem] font-medium transition-colors",
-                          open || active ? "bg-ink/[0.06] text-ink" : "text-ink/80 hover:text-ink",
+                          open || active ? "bg-ink/[0.06] text-ink" : light ? "text-white/90 hover:text-white" : "text-ink/80 hover:text-ink",
                         )}
                       >
                         {group.label}
@@ -138,22 +148,28 @@ export function SiteHeader({ locale }: { locale: Locale }) {
                 lang={other}
                 aria-label={T.switchLabel}
                 title={T.switchTo}
-                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-pill border border-ink/15 bg-white/70 px-3 text-sm font-bold uppercase tracking-wide backdrop-blur transition-colors hover:border-ink"
+                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-pill border border-ink/15 bg-white/85 px-3 text-sm font-bold uppercase tracking-wide backdrop-blur transition-colors hover:border-ink"
               >
                 {other}
               </Link>
-              <Magnetic className="hidden lg:inline-block">
-                <Link
-                  href={lp(locale, "/kontakti")}
-                  className="inline-flex min-h-11 items-center rounded-pill bg-ink px-5 text-[0.95rem] font-semibold text-white transition-colors hover:bg-blue"
-                >
-                  {T.contact}
-                </Link>
-              </Magnetic>
+              {/* Magnetic sets its own display, so the breakpoint lives on a wrapper. */}
+              <span className="hidden lg:inline-flex">
+                <Magnetic>
+                  <Link
+                    href={lp(locale, "/kontakti")}
+                    className={cn(
+                      "inline-flex min-h-11 items-center rounded-pill px-5 text-[0.95rem] font-semibold transition-colors",
+                      light ? "bg-white text-ink hover:bg-blue-soft" : "bg-ink text-white hover:bg-blue",
+                    )}
+                  >
+                    {T.contact}
+                  </Link>
+                </Magnetic>
+              </span>
               <button
                 ref={menuBtn}
                 type="button"
-                className="inline-flex min-h-11 items-center gap-2.5 rounded-pill border border-ink/15 bg-white/70 px-4 text-[0.95rem] font-semibold backdrop-blur lg:hidden"
+                className="inline-flex min-h-11 items-center gap-2.5 rounded-pill border border-ink/15 bg-white/85 px-4 text-[0.95rem] font-semibold backdrop-blur lg:hidden"
                 aria-expanded={menuOpen}
                 aria-controls={`${panelId}-mobile`}
                 onClick={() => setMenuOpen(true)}
@@ -163,7 +179,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
                   <span className="h-[1.5px] w-full bg-current" />
                   <span className="h-[1.5px] w-2/3 bg-current" />
                 </span>
-                {T.menu}
+                <span className="max-[379px]:sr-only">{T.menu}</span>
               </button>
             </div>
           </div>

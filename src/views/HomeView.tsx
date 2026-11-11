@@ -1,6 +1,5 @@
 import { Hero } from "@/components/home/Hero";
 import { Intro } from "@/components/home/Intro";
-import { LanguageTree } from "@/components/home/LanguageTree";
 import { ProgramsExplorer } from "@/components/home/ProgramsExplorer";
 import { StudentWork } from "@/components/home/StudentWork";
 import { NewsSection } from "@/components/home/NewsSection";
@@ -88,14 +87,15 @@ export async function HomeView({ locale }: { locale: Locale }) {
     getAchievements(locale),
     getStaff(locale),
   ]);
-  const tree = media.find((m) => m.url.includes("pema-e-gjuheve"));
   const lifeTabs = LIFE[locale](clubs).map((tab) => ({ ...tab, items: tab.items.map((i) => ({ ...i, href: "href" in i && i.href ? lp(locale, i.href) : undefined })) }));
 
   return (
     <>
-      <Hero hero={site.hero} locale={locale} />
-      <Intro intro={site.intro} locale={locale} />
-      {tree && <LanguageTree src={tree.url} copy={T.tree} />}
+      {/* The hero pins inside this wrapper while the introduction slides over it. */}
+      <div className="relative">
+        <Hero hero={site.hero} locale={locale} />
+        <Intro intro={site.intro} locale={locale} />
+      </div>
 
       <section aria-labelledby="programs-title" className="bg-paper py-20 md:py-32">
         <div className="shell">

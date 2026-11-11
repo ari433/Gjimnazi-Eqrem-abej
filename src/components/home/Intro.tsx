@@ -4,12 +4,12 @@ import { ButtonLink } from "@/components/ui/Button";
 import { lp, t, type Locale } from "@/lib/i18n";
 import type { SiteContent } from "@/lib/types";
 
-/** Navy introduction that the hero letter dissolves into. */
+/** Navy introduction: a rounded sheet that slides up over the pinned hero. */
 export function Intro({ intro, locale = "sq" }: { intro: SiteContent["intro"]; locale?: Locale }) {
   const H = t(locale).home_;
   return (
-    <section aria-labelledby="intro-title" className="grain relative -mt-px overflow-hidden bg-ink text-white">
-      <div className="shell relative py-20 md:py-32">
+    <section aria-labelledby="intro-title" className="grain relative z-10 flex min-h-svh flex-col justify-center overflow-hidden rounded-t-[1.75rem] bg-ink text-white shadow-[0_-24px_60px_rgba(4,10,28,0.45)] md:rounded-t-[2.75rem]">
+      <div className="shell relative py-16 md:py-28">
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="lg:col-span-7">
             <MaskText id="intro-title" text={intro.heading} className="text-mega font-bold" />
