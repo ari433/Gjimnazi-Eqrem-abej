@@ -289,6 +289,23 @@ export const staff: StaffMember[] = [
     status: P,
     published_at: "2026-11-11T08:00:00Z",
   },
+  {
+    id: "staff-mergim-teplani",
+    full_name: "Mërgim Teplani",
+    role_title: "Gjeografi",
+    role_title_de: "Geografie",
+    department: null,
+    bio: null,
+    photo_url: M("staf-mergim-teplani"),
+    email: null,
+    is_leadership: false,
+    sort_order: 11,
+    verification: "verified",
+    source_note: null,
+    video_url: null,
+    status: P,
+    published_at: "2026-11-11T08:00:00Z",
+  },
 ];
 
 /* ==================================================================== clubs */
